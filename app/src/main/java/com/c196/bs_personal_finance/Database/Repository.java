@@ -112,6 +112,16 @@ public class Repository {
         return user;
     }
 
+    public User getUserByName(String username) {
+        databaseExecutor.execute(()-> user = mUserDAO.getUserByName(username));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
 
     // ACCOUNTS
     public long insert(Account account) {

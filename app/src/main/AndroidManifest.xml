@@ -14,7 +14,10 @@
         android:theme="@style/Theme.BS_personal_finance"
         tools:targetApi="31">
         <activity
-            android:name=".UI.MainActivity"
+            android:name=".UI.CreateAccount"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

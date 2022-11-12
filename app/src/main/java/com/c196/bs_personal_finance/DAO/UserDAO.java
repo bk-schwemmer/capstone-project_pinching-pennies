@@ -25,6 +25,9 @@ public interface UserDAO {
     @Query("SELECT * FROM users ORDER BY username ASC")
     List<User> getAllUsers();
 
+    @Query("SELECT * FROM users WHERE username = :username")
+    User getUserByName(String username);
+
     @Query("SELECT * FROM users WHERE userID = :userID")
     User getUserByID(long userID);
 
