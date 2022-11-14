@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/red</item>
+        <item name="colorButtonNormal">@color/liability_red</item>
+        <item name="colorControlNormal">@color/asset_green</item>
+        <item name="colorControlActivated">@color/asset_green</item>
+        <item name="colorControlHighlight">@color/asset_green</item>
+    </style>
+
+</resources>

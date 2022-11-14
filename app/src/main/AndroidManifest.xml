@@ -14,7 +14,16 @@
         android:theme="@style/Theme.BS_personal_finance"
         tools:targetApi="31">
         <activity
-            android:name=".UI.CreateAccount"
+            android:name=".UI.TransactionDetails"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Transactions"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Accounts"
+            android:exported="false" />
+        <activity
+            android:name=".UI.CreateUser"
             android:exported="false" />
         <activity
             android:name=".UI.Login"

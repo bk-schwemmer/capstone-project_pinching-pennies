@@ -5,6 +5,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.text.DecimalFormat;
+
 @Entity(tableName = "accounts",
         foreignKeys =
         @ForeignKey(entity = User.class,
@@ -37,7 +39,6 @@ public class Account {
         this.type = type;
         this.currentBalance = currentBalance;
     }
-
 
     public long getAccountID() {
         return accountID;
@@ -73,6 +74,18 @@ public class Account {
 
     public double getCurrentBalance() {
         return currentBalance;
+    }
+
+    public String getCurrentBalanceString() {
+        DecimalFormat df = new DecimalFormat("#,###.##");
+        String formattedBalance;
+        if (currentBalance < 0) {
+            currentBalance = currentBalance * -1;
+            formattedBalance = "($" + df.format(currentBalance) + ")";
+        } else {
+            formattedBalance = "$" + df.format(currentBalance);
+        }
+        return formattedBalance;
     }
 
     public void setCurrentBalance(double currentBalance) {

@@ -213,6 +213,16 @@ public class Repository {
         return deletedTransactions;
     }
 
+    public List<Transaction> getTransactionsByUser(long userID) {
+        databaseExecutor.execute(()-> mTransactions = mTransactionDAO.getTransactionsByUser(userID));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return mTransactions;
+    }
+
     public List<Transaction> getTransactionByAccount(long acctID) {
         databaseExecutor.execute(()-> mTransactions = mTransactionDAO.getTransactionByAccount(acctID));
         try {

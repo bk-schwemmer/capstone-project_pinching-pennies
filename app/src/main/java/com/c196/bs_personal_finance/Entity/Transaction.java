@@ -5,6 +5,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.text.DecimalFormat;
+
 @Entity(tableName = "transactions",
         foreignKeys =
         @ForeignKey(entity = Account.class,
@@ -65,6 +67,18 @@ public class Transaction {
 
     public double getAmount() {
         return amount;
+    }
+
+    public String getAmountString() {
+        DecimalFormat df = new DecimalFormat("#,###.##");
+        String formattedBalance;
+        if (amount < 0) {
+            amount = amount * -1;
+            formattedBalance = "($" + df.format(amount) + ")";
+        } else {
+            formattedBalance = "$" + df.format(amount);
+        }
+        return formattedBalance;
     }
 
     public void setAmount(double amount) {

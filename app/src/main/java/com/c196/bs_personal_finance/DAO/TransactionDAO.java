@@ -22,7 +22,10 @@ public interface TransactionDAO {
     @Delete
     int delete(Transaction transaction);
 
-    @Query("SELECT * FROM transactions WHERE accountID = :acctID ORDER BY date ASC")
+    @Query("SELECT * FROM transactions WHERE accountID IN (SELECT accountID FROM accounts WHERE userID = :userID) ORDER BY date DESC")
+    List<Transaction> getTransactionsByUser(long userID);
+
+    @Query("SELECT * FROM transactions WHERE accountID = :acctID ORDER BY date DESC")
     List<Transaction> getTransactionByAccount(long acctID);
 
     @Query("SELECT * FROM transactions WHERE transactionID = :transID")

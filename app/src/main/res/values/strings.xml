@@ -4,4 +4,30 @@
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
     <string name="login_issue">No matching username/password</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="assets">Assets</string>
+    <string name="liabilities">Liabilities</string>
+    <string name="transactions">Transactions</string>
+    <string name="payee">Payee</string>
+    <string name="amount">Amount</string>
+    <string name="date">Date</string>
+    <string name="category">Category</string>
+    <string name="notes">Notes</string>
+    <string name="status">Status</string>
+    <string name="transaction_details">Transaction Details</string>
+    <string name="calendar">calendar</string>
+    <string name="add_account">Add Account</string>
+    <string name="account_name">Account Name</string>
+    <string name="current_balance">Current Balance</string>
+    <string name="cancel">CANCEL</string>
+    <string name="save">SAVE</string>
+    <string name="zero_dollars">$00.00</string>
 </resources>
