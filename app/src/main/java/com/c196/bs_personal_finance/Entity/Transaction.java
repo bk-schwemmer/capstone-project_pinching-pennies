@@ -25,7 +25,7 @@ public class Transaction {
     private String notes;
     private long category;
 
-    public enum Status { PENDING, ESTIMATE, FUTURE, RECONCILED }
+    public enum Status { Pending, Estimate, Future, Reconciled }
 
     public Transaction(long accountID, double amount, String payee, String date, Status status, String notes, long category) {
         this.accountID = accountID;

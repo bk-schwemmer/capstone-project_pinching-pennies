@@ -43,8 +43,9 @@ public class Transactions extends AppCompatActivity {
     }
 
     private void populateTransactionsList() {
-        currentUserID = getIntent().getLongExtra(Login.CURRENT_USER_ID, 0);
+//        currentUserID = getIntent().getLongExtra(Login.CURRENT_USER_ID, 0);
         currentAccountID = getIntent().getLongExtra(Accounts.CURRENT_ACCOUNT_ID, 0);
+        currentUserID = repo.getAccountByID(currentAccountID).getUserID();
 
         createTransactionHashMap();
         expandableListTitle = new ArrayList<>(expandableListDetail.keySet());

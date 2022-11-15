@@ -107,11 +107,11 @@ public class Login extends AppCompatActivity {
         Account pSave = new Account(2, "pSavings", Account.AccountType.SAVINGS, 7000.00);
         Account pCred = new Account(2, "pCredit", Account.AccountType.CREDIT, 3000.00);
 
-        Transaction b1 = new Transaction(1, 20.99, "Fred Meyer", "05/15/22", Transaction.Status.RECONCILED, "", 1);
-        Transaction b2 = new Transaction(2, 45.56, "Costco Gas", "07/09/22", Transaction.Status.RECONCILED, "", 2);
-        Transaction b3 = new Transaction(2, 328.00, "Idaho State", "11/01/22", Transaction.Status.RECONCILED, "", 4);
-        Transaction b4 = new Transaction(2, 260.00, "Amber", "11/15/22", Transaction.Status.RECONCILED, "Oliver 11.15 & 11.29", 3);
-        Transaction b5 = new Transaction(2, 32.44, "Maverik", "11/15/22", Transaction.Status.RECONCILED, "", 2);
+        Transaction b1 = new Transaction(1, 20.99, "Fred Meyer", "05/15/22", Transaction.Status.Reconciled, "", 1);
+        Transaction b2 = new Transaction(2, 45.56, "Costco Gas", "07/09/22", Transaction.Status.Reconciled, "", 2);
+        Transaction b3 = new Transaction(2, 328.00, "Idaho State", "11/01/22", Transaction.Status.Reconciled, "", 4);
+        Transaction b4 = new Transaction(2, 260.00, "Child Support", "11/15/22", Transaction.Status.Reconciled, "Oliver 11.15 & 11.29", 3);
+        Transaction b5 = new Transaction(2, 32.44, "Maverik", "11/15/22", Transaction.Status.Reconciled, "", 2);
 
         Category groceries = new Category("Groceries", 0);
         Category transportation = new Category("Transport", 0);
