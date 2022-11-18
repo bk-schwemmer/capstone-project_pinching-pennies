@@ -9,6 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#7E0000</color>
 
-    <color name="asset_green">#B0EFB7</color>
-    <color name="liability_red">#956565</color>
+    <color name="colorPrimary">#495B29</color>
+    <color name="colorPrimaryDark">#232C14</color>
+    <color name="colorAccent">#B89E5E</color>
+
+    <color name="asset_green">#445C47</color>
+    <color name="liability_red">#753B3B</color>
+    <color name="dark_gray">#666666</color>
 </resources>

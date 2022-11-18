@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".UI.Transactions">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/transactionHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/transactions"
+        android:padding="@dimen/spacing_medium"
+        android:textSize="20sp"
+        android:background="@color/black"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ExpandableListView
+        android:id="@+id/transactionsExpandableList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#A4C739"
+        android:dividerHeight="1.0dp"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/transactionHeading" />
+
+    <TextView
+        android:id="@+id/noTransactions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:text="@string/no_transactions"
+        android:gravity="center"
+        android:visibility="gone" />
 
-        <ExpandableListView
-            android:id="@+id/transactionsExpandableList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="#A4C739"
-            android:dividerHeight="1.0dp"
-            />
-
-    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addTransactionButton"
+        android:contentDescription="@string/add_transaction"
+        style="@style/floatingAddButton"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

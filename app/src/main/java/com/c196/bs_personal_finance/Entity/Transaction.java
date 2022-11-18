@@ -71,14 +71,7 @@ public class Transaction {
 
     public String getAmountString() {
         DecimalFormat df = new DecimalFormat("#,###.##");
-        String formattedBalance;
-        if (amount < 0) {
-            amount = amount * -1;
-            formattedBalance = "($" + df.format(amount) + ")";
-        } else {
-            formattedBalance = "$" + df.format(amount);
-        }
-        return formattedBalance;
+        return df.format(amount);
     }
 
     public void setAmount(double amount) {
@@ -133,5 +126,37 @@ public class Transaction {
                 ", amount=" + amount +
                 ", payee='" + payee + '\'' +
                 '}';
+    }
+
+    public static String statusToString(Status status) {
+        switch (status) {
+            case Pending:
+                return "Pending";
+            case Estimate:
+                return "Estimate";
+            case Future:
+                return "Future";
+            case Reconciled:
+                return "Reconciled";
+
+            default:
+                return "";
+        }
+    }
+
+    public static Status stringToStatus(String statusString) {
+        switch (statusString) {
+            case "Pending":
+                return Status.Pending;
+            case "Estimate":
+                return Status.Estimate;
+            case "Future":
+                return Status.Future;
+            case "Reconciled":
+                return Status.Reconciled;
+
+            default:
+                return null;
+        }
     }
 }

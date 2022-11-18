@@ -15,7 +15,7 @@ import com.c196.bs_personal_finance.Entity.Category;
 import com.c196.bs_personal_finance.Entity.Transaction;
 import com.c196.bs_personal_finance.Entity.User;
 
-@Database(entities = {User.class, Account.class, Transaction.class, Category.class}, version = 3, exportSchema = false)
+@Database(entities = {User.class, Account.class, Transaction.class, Category.class}, version = 4, exportSchema = false)
 public abstract class FinanceDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "financeDatabase.db";
 

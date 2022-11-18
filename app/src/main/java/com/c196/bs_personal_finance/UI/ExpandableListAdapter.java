@@ -10,8 +10,13 @@ import android.widget.TextView;
 
 import com.c196.bs_personal_finance.R;
 
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.text.NumberFormat;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 // Followed Tutorial at https://www.loginworks.com/blogs/work-expandablelistview-android/
 
@@ -94,7 +99,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         expandedListChildTitleView.setText(parsedChild[1]);
         if (parsedChild.length > 2) {
-            expandedListChildAmountView.setText(parsedChild[2]);
+            NumberFormat nf = NumberFormat.getCurrencyInstance();
+
+            String amountString = parsedChild[2];
+
+            double amount;
+            if (TransactionDetails.validDouble(amountString)) {
+                amount = Double.parseDouble(amountString);
+                amountString = nf.format(amount);
+            }
+            expandedListChildAmountView.setText(amountString);
         }
 
         return convertView;

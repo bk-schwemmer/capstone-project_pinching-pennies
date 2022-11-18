@@ -100,12 +100,12 @@ public class Login extends AppCompatActivity {
         User p = new User("mjreoch", "mjr");
 
         // Test Accounts
-        Account bCash = new Account(1, "bCash", Account.AccountType.CASH, 0.00);
-        Account bCheck = new Account(1, "bChecking", Account.AccountType.CHECKING, 500.00);
-        Account bLoan = new Account(1, "bCar", Account.AccountType.DEBT, 12000.00);
+        Account bCash = new Account(1, "bCash", Account.AccountType.Cash, 0.00);
+        Account bCheck = new Account(1, "bChecking", Account.AccountType.Checking, 500.00);
+        Account bLoan = new Account(1, "bCar", Account.AccountType.Debt, -12000.00);
 
-        Account pSave = new Account(2, "pSavings", Account.AccountType.SAVINGS, 7000.00);
-        Account pCred = new Account(2, "pCredit", Account.AccountType.CREDIT, 3000.00);
+        Account pSave = new Account(2, "pSavings", Account.AccountType.Savings, 7000.00);
+        Account pCred = new Account(2, "pCredit", Account.AccountType.Credit, -3000.00);
 
         Transaction b1 = new Transaction(1, 20.99, "Fred Meyer", "05/15/22", Transaction.Status.Reconciled, "", 1);
         Transaction b2 = new Transaction(2, 45.56, "Costco Gas", "07/09/22", Transaction.Status.Reconciled, "", 2);

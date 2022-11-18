@@ -177,6 +177,17 @@ public class Repository {
         return account;
     }
 
+    public int addTransaction(long acctID, double amount) {
+        databaseExecutor.execute(()-> updatedAccounts = mAccountDAO.addTransaction(acctID, amount));
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return updatedAccounts;
+    }
+
 
     // TRANSACTIONS
 
@@ -321,6 +332,16 @@ public class Repository {
 
     public Category getCategoryByID(long catID) {
         databaseExecutor.execute(()-> category = mCategoryDAO.getCategoryByID(catID));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return category;
+    }
+
+    public Category getCategoryByName(String catName) {
+        databaseExecutor.execute(()-> category = mCategoryDAO.getCategoryByName(catName));
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

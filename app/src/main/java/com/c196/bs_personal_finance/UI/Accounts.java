@@ -1,56 +1,104 @@
 package com.c196.bs_personal_finance.UI;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.c196.bs_personal_finance.Database.Repository;
 import com.c196.bs_personal_finance.Entity.Account;
+import com.c196.bs_personal_finance.Entity.Transaction;
 import com.c196.bs_personal_finance.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Accounts extends AppCompatActivity {
+
+// Followed answer guide here to implement Context Menu in RecyclerView
+// https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview
+
+public class Accounts extends AppCompatActivity implements AccountDeleteFragment.OnAccountDeletedListener {
 
     public static final String CURRENT_ACCOUNT_ID = "currentAccountID";
+    public static final String ACCOUNT_PURPOSE = "accountPurpose";
 
     private Repository repo;
     private AccountAdapter mAssetsAccountAdapter;
     private AccountAdapter mLiabilitiesAccountAdapter;
+    private Account selectedAccount;
     private RecyclerView mAssetRecyclerView;
     private RecyclerView mLiabilityRecyclerView;
     private long currentUserID;
     private FloatingActionButton addAccountButton;
+    private ProgressBar deletingProgress;
+
+    private int mCurrentItemPosition;
+    private Choice selectedList;
+
+    private enum Choice { ASSET, LIABILITY }
+
+    public interface onLongItemClickListener {
+        void ItemLongClicked(View v, int position);
+    }
 
     // CLICK LISTENERS
+    private final View.OnClickListener addAccount = view -> {
+        Intent intent = new Intent(Accounts.this, AccountDetails.class);
+        intent.putExtra(Login.CURRENT_USER_ID, currentUserID);
+        intent.putExtra(ACCOUNT_PURPOSE, getString(R.string.add));
+        startActivity(intent);
+    };
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_accounts);
+        setTitle(R.string.accounts);
 
         repo = new Repository(getApplication());
         fetchUiElements();
         populateAccountsRecycler();
 
+        addAccountButton.setOnClickListener(addAccount);
+    }
 
-        addAccountButton.setOnClickListener(view -> {
-            AddAccountFragment addAcctFrag = new AddAccountFragment();
-            addAcctFrag.show(getSupportFragmentManager(), "Add Account Fragment");
-        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_accounts, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                Intent toLoginScreen = new Intent(Accounts.this, Login.class);
+                startActivity(toLoginScreen);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public boolean addAccount(long userID, String accountName, Account.AccountType accountType,
@@ -99,6 +147,7 @@ public class Accounts extends AppCompatActivity {
             }
         }
 
+        // TODO DELETE
         if (unsortedAccounts.size() > 0) {
             Toast.makeText(
                     Accounts.this,
@@ -114,23 +163,41 @@ public class Accounts extends AppCompatActivity {
                 new GridLayoutManager(getApplicationContext(), 1);
         mAssetRecyclerView.setLayoutManager(assetLayoutManager);
         mLiabilityRecyclerView.setLayoutManager(liabilityLayoutManager);
-        mAssetsAccountAdapter = new AccountAdapter(assetAccounts);
-        mLiabilitiesAccountAdapter = new AccountAdapter(liabilityAccounts);
-        mAssetRecyclerView.setAdapter(mAssetsAccountAdapter);
-        mLiabilityRecyclerView.setAdapter(mLiabilitiesAccountAdapter);
 
+        Thread thread = new Thread(() -> {
+            mAssetsAccountAdapter = new AccountAdapter(assetAccounts);
+            mLiabilitiesAccountAdapter = new AccountAdapter(liabilityAccounts);
+
+            Accounts.this.runOnUiThread(() -> {
+                mAssetRecyclerView.setAdapter(mAssetsAccountAdapter);
+                mLiabilityRecyclerView.setAdapter(mLiabilitiesAccountAdapter);
+            });
+            registerForContextMenu(mAssetRecyclerView);
+            registerForContextMenu(mLiabilityRecyclerView);
+
+            mAssetsAccountAdapter.setOnLongItemClickListener((v, position) -> {
+                mCurrentItemPosition = position;
+                selectedList = Choice.ASSET;
+            });
+
+            mLiabilitiesAccountAdapter.setOnLongItemClickListener((v, position) -> {
+                mCurrentItemPosition = position;
+                selectedList = Choice.LIABILITY;
+            });
+        });
+        thread.start();
     }
 
     private String sortType(Account.AccountType type) {
         switch (type) {
-            case CASH:
-            case CHECKING:
-            case SAVINGS:
-            case FUND:
+            case Cash:
+            case Checking:
+            case Savings:
+            case Fund:
                 return "Asset";
-            case DEBT:
-            case CREDIT:
-            case PAYMENT:
+            case Debt:
+            case Credit:
+            case Payment:
                 return "Liability";
 
             default:
@@ -138,7 +205,7 @@ public class Accounts extends AppCompatActivity {
         }
     }
 
-    private class AccountHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class AccountHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private Account mAccount;
         private final TextView mNameView;
@@ -154,7 +221,9 @@ public class Accounts extends AppCompatActivity {
         public void bind(Account account, int position) {
             mAccount = account;
             mNameView.setText(account.getAccountName());
-            mBalanceView.setText(account.getCurrentBalanceString());
+            NumberFormat nf = NumberFormat.getCurrencyInstance();
+            double balance = account.getCurrentBalance();
+            mBalanceView.setText(nf.format(balance));
 
 //            mTextView.setBackgroundColor(mTermColors[cardAdder % mTermColors.length]);
 //            cardAdder++;
@@ -162,6 +231,9 @@ public class Accounts extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+
+            selectedAccount = mAccount;
+
             Intent intent = new Intent(Accounts.this, Transactions.class);
             intent.putExtra(Login.CURRENT_USER_ID, mAccount.getUserID());
             intent.putExtra(CURRENT_ACCOUNT_ID, mAccount.getAccountID());
@@ -172,9 +244,15 @@ public class Accounts extends AppCompatActivity {
     private class AccountAdapter extends RecyclerView.Adapter<AccountHolder> {
 
         private final List<Account> mAccountList;
+        private onLongItemClickListener mOnLongItemClickListener;
+
 
         public AccountAdapter(List<Account> accounts) {
             mAccountList = accounts;
+        }
+
+        public void setOnLongItemClickListener(onLongItemClickListener onLongItemClickListener) {
+            mOnLongItemClickListener = onLongItemClickListener;
         }
 
         @Override
@@ -186,6 +264,15 @@ public class Accounts extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull AccountHolder holder, int position) {
             holder.bind(mAccountList.get(position), position);
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (mOnLongItemClickListener != null) {
+                        mOnLongItemClickListener.ItemLongClicked(view, holder.getBindingAdapterPosition());
+                    }
+                    return false;
+                }
+            });
         }
 
         @Override
@@ -194,10 +281,111 @@ public class Accounts extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_account_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        if (selectedList.equals(Choice.ASSET)) {
+            selectedAccount = mAssetsAccountAdapter.mAccountList.get(mCurrentItemPosition);
+        } else {
+            selectedAccount = mLiabilitiesAccountAdapter.mAccountList.get(mCurrentItemPosition);
+        }
+
+        switch (item.getItemId()) {
+            case R.id.accountDetails:
+                Intent intent = new Intent(Accounts.this, AccountDetails.class);
+                intent.putExtra(Login.CURRENT_USER_ID, selectedAccount.getUserID());
+                intent.putExtra(CURRENT_ACCOUNT_ID, selectedAccount.getAccountID());
+                intent.putExtra(ACCOUNT_PURPOSE, getString(R.string.modify));
+                startActivity(intent);
+                return false;
+
+            case R.id.deleteAccount:
+                Thread deleteTermThread = new Thread(() -> {
+
+                    List<Transaction> transactionsInAccount = repo.getTransactionByAccount(selectedAccount.getAccountID());
+                    if (transactionsInAccount.size() == 0) {
+                        deleteAccount(selectedAccount);
+                    } else {
+                        Accounts.this.runOnUiThread(() -> {
+                            FragmentManager manager = getSupportFragmentManager();
+                            AccountDeleteFragment dialog = new AccountDeleteFragment();
+                            dialog.show(manager, "warningDialog");
+                            System.out.println("Unable to delete Account. There are transactions assigned to this account.");
+                            Toast.makeText(
+                                    Accounts.this,
+                                    "This term has courses",
+                                    Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                });
+                deleteTermThread.start();
+                return false;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    public void deleteAccount(Account account) {
+        Accounts.this.runOnUiThread(() -> {
+            deletingProgress.setVisibility(View.VISIBLE);
+        });
+
+        if (repo.delete(account) < 1) {
+            Accounts.this.runOnUiThread(() -> {
+                Toast.makeText(this, "Account Deletion Failed", Toast.LENGTH_SHORT).show();
+                deletingProgress.setVisibility(View.GONE);
+            });
+        } else {
+            Accounts.this.runOnUiThread(() -> {
+                Toast.makeText(this, "Account Deleted", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Accounts.this, Accounts.class);
+                intent.putExtra(Login.CURRENT_USER_ID, currentUserID);
+                startActivity(intent);
+                deletingProgress.setVisibility(View.GONE);
+            });
+        }
+    }
+
+    private boolean deleteTransactionsInAccount(Account account) {
+        List<Transaction> transactions = repo.getTransactionByAccount(account.getAccountID());
+        boolean deleteSuccessful = true;
+
+        if (transactions.size() != 0) {
+            for (Transaction transaction : transactions) {
+                if (repo.delete(transaction) < 0) deleteSuccessful = false;
+            }
+
+            // Verify all assessments have been deleted
+            transactions = repo.getTransactionByAccount(account.getAccountID());
+            if (transactions.size() != 0) deleteSuccessful = false;
+        }
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public void onDeleteOverride() {
+        deletingProgress.setVisibility(View.VISIBLE);
+        Thread thread = new Thread(() -> {
+            if (deleteTransactionsInAccount(selectedAccount)) {
+                deleteAccount(selectedAccount);
+            }
+        });
+        thread.start();
+    }
+
     private void fetchUiElements() {
         mAssetRecyclerView = findViewById(R.id.assetAccountsRecycler);
         mLiabilityRecyclerView = findViewById(R.id.liabilityAccountsRecycler);
 
+        deletingProgress = findViewById(R.id.deletingProgressBar);
         addAccountButton = findViewById(R.id.addAccountButton);
     }
 

@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.TransactionDetails">
+    tools:context=".UI.AccountDetails">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:divider="@drawable/spacer_large"
+        android:divider="@drawable/spacer_huge"
         android:showDividers="middle"
         android:gravity="center"
-        android:padding="@dimen/spacing_huge" >
+        android:padding="@dimen/spacing_large" >
 
-        <!-- Payee -->
+        <!-- Name -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,16 +24,16 @@
 
             <TextView
                 style="@style/detailLabel"
-                android:text="@string/payee" />
+                android:text="@string/account_name" />
 
             <EditText
-                android:id="@+id/payeeEdit"
+                android:id="@+id/nameEdit"
                 style="@style/detailInput"
                 android:inputType="text"
-                android:hint="@string/payee" />
+                android:hint="@string/account_name" />
         </LinearLayout>
 
-        <!-- Amount -->
+        <!-- Balance -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,35 +42,14 @@
             >
             <TextView
                 style="@style/detailLabel"
-                android:text="@string/amount" />
+                android:text="@string/current_balance" />
 
             <EditText
-                android:id="@+id/amountEdit"
+                android:id="@+id/balanceEdit"
                 style="@style/detailInput"
                 android:inputType="numberDecimal"
                 android:digits="0123456789.,-"
-                android:hint="@string/amount" />
-        </LinearLayout>
-
-        <!-- Date -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center" >
-            <TextView
-                style="@style/detailLabel"
-                android:text="@string/date" />
-
-            <TextView
-                android:id="@+id/dateView"
-                style="@style/detailInput"
-                android:hint="@string/date" />
-
-            <ImageButton
-                android:id="@+id/datePickerButton"
-                style="@style/datePickerButton"
-                />
+                android:hint="@string/current_balance" />
         </LinearLayout>
 
         <!-- Category -->
@@ -82,50 +61,13 @@
 
             <TextView
                 style="@style/detailLabel"
-                android:text="@string/category" />
+                android:text="@string/account_type" />
 
             <Spinner
-                android:id="@+id/categoryDropdown"
+                android:id="@+id/accountTypeDropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:prompt="@string/category"
-                />
-
-        </LinearLayout>
-
-        <!-- Status -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center" >
-
-            <TextView
-                style="@style/detailLabel"
-                android:text="@string/status" />
-
-            <Spinner
-                android:id="@+id/statusDropdown"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <!-- Notes -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center" >
-            <TextView
-                style="@style/detailLabel"
-                android:text="@string/notes" />
-
-            <EditText
-                android:id="@+id/notesEdit"
-                style="@style/detailInput"
-                android:inputType="textMultiLine"
-                android:lines="3"
-                android:hint="@string/notes" />
+                android:prompt="@string/account_type" />
         </LinearLayout>
 
         <!-- Buttons -->
@@ -157,7 +99,7 @@
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/delete_transaction"
+            android:text="@string/delete_account"
             android:layout_gravity="center"
             android:visibility="gone" />
 

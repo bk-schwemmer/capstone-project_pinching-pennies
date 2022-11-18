@@ -10,4 +10,41 @@
         <item name="colorControlHighlight">@color/asset_green</item>
     </style>
 
+    <style name="datePickerButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">5dp</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:src">@drawable/calendar_icon</item>
+        <item name="contentDescription">@string/calendar</item>
+    </style>
+
+    <style name="detailLabel">
+        <item name="android:layout_width">75dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:gravity">right</item>
+    </style>
+
+    <style name="detailInput">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="floatingAddButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:src">@drawable/add</item>
+        <item name="tint">@color/white</item>
+        <item name="backgroundTint">@color/black</item>
+
+    </style>
+
 </resources>

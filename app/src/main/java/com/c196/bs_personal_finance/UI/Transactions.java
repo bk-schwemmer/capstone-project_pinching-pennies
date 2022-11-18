@@ -5,13 +5,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.c196.bs_personal_finance.Database.Repository;
 import com.c196.bs_personal_finance.Entity.Transaction;
 import com.c196.bs_personal_finance.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +26,7 @@ import java.util.Map;
 public class Transactions extends AppCompatActivity {
 
     public static final String SELECTED_TRANSACTION_ID = "selectedTransactionID";
+    public static final String TRANSACTION_PURPOSE = "transactionPurpose";
 
     private Repository repo;
     private ExpandableListView expandableListView;
@@ -31,21 +36,60 @@ public class Transactions extends AppCompatActivity {
     private long currentUserID;
     private long currentAccountID = 0;
 
+    private TextView noTransactionsView;
+    private TextView transactionHeading;
+    private FloatingActionButton addTransactionButton;
+
+    // CLICK LISTENERS
+    private final View.OnClickListener addTransaction = view -> {
+        Intent intent = new Intent(Transactions.this, TransactionDetails.class);
+        intent.putExtra(Accounts.CURRENT_ACCOUNT_ID, currentAccountID);
+        intent.putExtra(TRANSACTION_PURPOSE, getString(R.string.add));
+        startActivity(intent);
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_transactions);
-        setTitle("Transactions");
 
         repo = new Repository(getApplication());
         fetchUiElements();
         populateTransactionsList();
+
+        addTransactionButton.setOnClickListener(addTransaction);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_transactions, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                Intent toLoginScreen = new Intent(Transactions.this, Login.class);
+                startActivity(toLoginScreen);
+                return true;
+
+            case R.id.accounts:
+                Intent toAccountsScreen = new Intent(Transactions.this, Accounts.class);
+                toAccountsScreen.putExtra(Login.CURRENT_USER_ID, currentUserID);
+                startActivity(toAccountsScreen);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void populateTransactionsList() {
-//        currentUserID = getIntent().getLongExtra(Login.CURRENT_USER_ID, 0);
         currentAccountID = getIntent().getLongExtra(Accounts.CURRENT_ACCOUNT_ID, 0);
         currentUserID = repo.getAccountByID(currentAccountID).getUserID();
+
+        setTitle(repo.getAccountByID(currentAccountID).getAccountName());
 
         createTransactionHashMap();
         expandableListTitle = new ArrayList<>(expandableListDetail.keySet());
@@ -70,22 +114,20 @@ public class Transactions extends AppCompatActivity {
                         expandableListTitle.get(groupPosition) + " List Collapsed.",
                         Toast.LENGTH_SHORT).show());
 
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
-                Toast.makeText(
-                        getApplicationContext(),
-                        expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition),
-                        Toast.LENGTH_LONG).show();
+        expandableListView.setOnChildClickListener((parent, view, groupPosition, childPosition, id) -> {
+            Toast.makeText(
+                    getApplicationContext(),
+                    expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition),
+                    Toast.LENGTH_LONG).show();
 
-                String[] parsedChild = expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).split("_");
-                long transactionID = Long.parseLong(parsedChild[0]);
-                Intent intent = new Intent(Transactions.this, TransactionDetails.class);
-                intent.putExtra(SELECTED_TRANSACTION_ID, transactionID);
-                startActivity(intent);
+            String[] parsedChild = expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).split("_");
+            long transactionID = Long.parseLong(parsedChild[0]);
+            Intent intent = new Intent(Transactions.this, TransactionDetails.class);
+            intent.putExtra(SELECTED_TRANSACTION_ID, transactionID);
+            intent.putExtra(TRANSACTION_PURPOSE, getString(R.string.modify));
+            startActivity(intent);
 
-                return false;
-            }
+            return false;
         });
     }
 
@@ -98,6 +140,14 @@ public class Transactions extends AppCompatActivity {
         } else {
             transactions = repo.getTransactionByAccount(currentAccountID);
         }
+
+        if (transactions.size() == 0) {
+            noTransactionsView.setVisibility(View.VISIBLE);
+            expandableListView.setVisibility(View.GONE);
+            transactionHeading.setVisibility(View.GONE);
+            return;
+        }
+
 
         // TODO DELETE THIS
         int i = 1;
@@ -141,5 +191,8 @@ public class Transactions extends AppCompatActivity {
 
     private void fetchUiElements() {
         expandableListView = findViewById(R.id.transactionsExpandableList);
+        addTransactionButton = findViewById(R.id.addTransactionButton);
+        noTransactionsView = findViewById(R.id.noTransactions);
+        transactionHeading = findViewById(R.id.transactionHeading);
     }
 }

@@ -22,7 +22,7 @@ public class Account {
     private AccountType type;
     private double currentBalance;
 
-    public enum AccountType { CASH, CHECKING, SAVINGS, FUND, DEBT, CREDIT, PAYMENT}
+    public enum AccountType { Cash, Checking, Savings, Fund, Debt, Credit, Payment}
 
     public Account(long userID, String accountName, AccountType type, double currentBalance) {
         this.userID = userID;
@@ -78,14 +78,15 @@ public class Account {
 
     public String getCurrentBalanceString() {
         DecimalFormat df = new DecimalFormat("#,###.##");
-        String formattedBalance;
-        if (currentBalance < 0) {
-            currentBalance = currentBalance * -1;
-            formattedBalance = "($" + df.format(currentBalance) + ")";
-        } else {
-            formattedBalance = "$" + df.format(currentBalance);
-        }
-        return formattedBalance;
+//        String formattedBalance;
+//        if (currentBalance < 0) {
+//            currentBalance = currentBalance * -1;
+//            formattedBalance = "($" + df.format(currentBalance) + ")";
+//        } else {
+//            formattedBalance = "$" + df.format(currentBalance);
+//        }
+//        return formattedBalance;
+        return df.format(currentBalance);
     }
 
     public void setCurrentBalance(double currentBalance) {
@@ -100,5 +101,49 @@ public class Account {
                 ", type=" + type +
                 ", currentBalance=" + currentBalance +
                 '}';
+    }
+
+    public static String typeToString(AccountType accountType) {
+        switch (accountType) {
+            case Cash:
+                return "Cash";
+            case Checking:
+                return "Checking";
+            case Savings:
+                return "Savings";
+            case Fund:
+                return "Fund";
+            case Credit:
+                return "Credit";
+            case Debt:
+                return "Debt";
+            case Payment:
+                return "Payment";
+
+            default:
+                return "";
+        }
+    }
+
+    public static AccountType stringToType(String typeString) {
+        switch (typeString) {
+            case "Cash":
+                return AccountType.Cash;
+            case "Checking":
+                return AccountType.Checking;
+            case "Savings":
+                return AccountType.Savings;
+            case "Fund":
+                return AccountType.Fund;
+            case "Credit":
+                return AccountType.Credit;
+            case "Debt":
+                return AccountType.Debt;
+            case "Payment":
+                return AccountType.Payment;
+
+            default:
+                return null;
+        }
     }
 }

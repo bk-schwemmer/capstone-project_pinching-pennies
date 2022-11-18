@@ -28,4 +28,7 @@ public interface AccountDAO {
     @Query("SELECT * FROM accounts WHERE accountID = :acctID")
     Account getAccountByID(long acctID);
 
+    @Query("UPDATE accounts SET currentBalance = currentBalance + :amount WHERE accountID = :acctID")
+    int addTransaction(long acctID, double amount);
+
 }

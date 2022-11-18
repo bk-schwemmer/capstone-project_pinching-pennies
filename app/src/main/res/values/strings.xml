@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">BS_personal_finance</string>
+    <string name="app_name">BROKE</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
     <string name="login_issue">No matching username/password</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -31,4 +32,20 @@
     <string name="save">SAVE</string>
     <string name="zero_dollars">$00.00</string>
     <string name="delete_transaction">DELETE TRANSACTION</string>
+
+    // Warning Dialog
+    <string name="incomplete">Incomplete Information</string>
+    <string name="incomplete_message">Please fill out all fields to continue.</string>
+    <string name="ok">OK</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="modify">MODIFY</string>
+    <string name="add">ADD</string>
+    <string name="logout">Logout</string>
+    <string name="accounts">Accounts</string>
+    <string name="account_type">Account Type</string>
+    <string name="acount_details">Account Details</string>
+    <string name="no_transactions">No applicable transactions have been added yet.\n Add a transaction to proceed.</string>
+    <string name="account_details">Account Details</string>
+    <string name="delete_account">Delete Account</string>
+
 </resources>

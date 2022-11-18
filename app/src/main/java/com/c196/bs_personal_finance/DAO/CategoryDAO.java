@@ -27,4 +27,7 @@ public interface CategoryDAO {
 
     @Query("SELECT * FROM categories WHERE categoryID = :catID OR parentID = :catID")
     Category getCategoryByID(long catID);
+
+    @Query("SELECT * FROM categories WHERE categoryName = :catName")
+    Category getCategoryByName(String catName);
 }

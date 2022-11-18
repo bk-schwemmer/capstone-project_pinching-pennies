@@ -7,59 +7,69 @@
     android:layout_height="match_parent"
     tools:context=".UI.Accounts">
 
-    <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/assets"
+                android:padding="@dimen/spacing_medium"
+                android:textSize="20sp"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/assetAccountsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/asset_green"
+                android:padding="20dp"
+                android:paddingBottom="100dp"
+                android:clipToPadding="false"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/liabilities"
+                android:padding="@dimen/spacing_medium"
+                android:textSize="20sp"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/liabilityAccountsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/liability_red"
+                android:padding="20dp"
+                android:paddingBottom="100dp"
+                android:clipToPadding="false" />
+
+        </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/deletingProgressBar"
+        style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/assets"
-            android:padding="10dp"
-            android:textSize="20sp"
-            android:background="@color/black"
-            android:textColor="@color/white"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/assetAccountsRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="@integer/material_motion_duration_long_1"
-            android:background="@color/asset_green"
-            android:padding="20dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/liabilities"
-            android:padding="10dp"
-            android:textSize="20sp"
-            android:background="@color/black"
-            android:textColor="@color/white"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/liabilityAccountsRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="@integer/material_motion_duration_long_1"
-            android:background="@color/liability_red"
-            android:padding="20dp" />
-
-    </LinearLayout>
-
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_huge"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addAccountButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/add"
         android:contentDescription="@string/add_account"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="20dp"
-        />
+        style="@style/floatingAddButton"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
