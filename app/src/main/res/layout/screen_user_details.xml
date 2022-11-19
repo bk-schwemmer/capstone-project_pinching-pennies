@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.AccountDetails">
+    tools:context=".UI.UserDetails">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,8 +13,22 @@
         android:orientation="vertical"
         android:divider="@drawable/spacer_huge"
         android:showDividers="middle"
-        android:gravity="center"
-        android:padding="@dimen/spacing_large" >
+        android:gravity="center_vertical"
+        android:padding="@dimen/spacing_huge" >
+
+        <!-- User List -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Users"
+            android:textSize="20sp"
+            />
+
+        <Spinner
+            android:id="@+id/userDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
         <!-- Name -->
         <LinearLayout
@@ -24,35 +39,16 @@
 
             <TextView
                 style="@style/detailLabel"
-                android:text="@string/account_name" />
+                android:text="@string/name" />
 
             <EditText
                 android:id="@+id/nameEdit"
                 style="@style/detailInput"
                 android:inputType="text"
-                android:hint="@string/account_name" />
+                android:hint="@string/name" />
         </LinearLayout>
 
-        <!-- Balance -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            >
-            <TextView
-                style="@style/detailLabel"
-                android:text="@string/current_balance" />
-
-            <EditText
-                android:id="@+id/balanceEdit"
-                style="@style/detailInput"
-                android:inputType="numberDecimal"
-                android:digits="0123456789.,-"
-                android:hint="@string/current_balance" />
-        </LinearLayout>
-
-        <!-- Category -->
+        <!-- Username -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,13 +57,31 @@
 
             <TextView
                 style="@style/detailLabel"
-                android:text="@string/account_type" />
+                android:text="@string/username" />
 
-            <Spinner
-                android:id="@+id/accountTypeDropdown"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/account_type" />
+            <EditText
+                android:id="@+id/usernameEdit"
+                style="@style/detailInput"
+                android:inputType="text"
+                android:hint="@string/username" />
+        </LinearLayout>
+
+        <!-- Password -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center" >
+
+            <TextView
+                style="@style/detailLabel"
+                android:text="@string/password" />
+
+            <EditText
+                android:id="@+id/passwordEdit"
+                style="@style/detailInput"
+                android:inputType="textPassword"
+                android:hint="@string/password" />
         </LinearLayout>
 
         <!-- Buttons -->
@@ -99,17 +113,20 @@
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/delete_account"
+            android:text="@string/delete_user"
             android:layout_gravity="center"
             android:visibility="gone" />
-
-        <ProgressBar
-            android:id="@+id/deletingProgressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_huge"
-            android:visibility="gone" />
-
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/deletingProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

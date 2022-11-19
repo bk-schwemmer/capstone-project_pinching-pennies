@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentManager;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.autofill.ImageTransformation;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -256,7 +255,7 @@ public class TransactionDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
-                Intent toLoginScreen = new Intent(TransactionDetails.this, Login.class);
+                Intent toLoginScreen = new Intent(TransactionDetails.this, UserLogin.class);
                 startActivity(toLoginScreen);
                 return true;
 

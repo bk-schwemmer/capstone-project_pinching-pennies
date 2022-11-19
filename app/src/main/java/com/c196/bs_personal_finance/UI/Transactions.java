@@ -1,7 +1,6 @@
 package com.c196.bs_personal_finance.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,13 +69,13 @@ public class Transactions extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
-                Intent toLoginScreen = new Intent(Transactions.this, Login.class);
+                Intent toLoginScreen = new Intent(Transactions.this, UserLogin.class);
                 startActivity(toLoginScreen);
                 return true;
 
             case R.id.accounts:
                 Intent toAccountsScreen = new Intent(Transactions.this, Accounts.class);
-                toAccountsScreen.putExtra(Login.CURRENT_USER_ID, currentUserID);
+                toAccountsScreen.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
                 startActivity(toAccountsScreen);
                 return true;
 

@@ -43,9 +43,13 @@
     <string name="logout">Logout</string>
     <string name="accounts">Accounts</string>
     <string name="account_type">Account Type</string>
-    <string name="acount_details">Account Details</string>
     <string name="no_transactions">No applicable transactions have been added yet.\n Add a transaction to proceed.</string>
     <string name="account_details">Account Details</string>
     <string name="delete_account">Delete Account</string>
+    <string name="add_user">Add New User</string>
+    <string name="new_user">New User</string>
+    <string name="name">Name</string>
+    <string name="user_details">User Details</string>
+    <string name="delete_user">Delete User</string>
 
 </resources>

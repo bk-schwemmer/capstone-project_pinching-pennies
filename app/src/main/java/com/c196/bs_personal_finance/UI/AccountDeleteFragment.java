@@ -20,9 +20,6 @@ public class AccountDeleteFragment extends DialogFragment {
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle("Delete Term");
-
         return new AlertDialog.Builder(getActivity())
                 .setTitle("Delete Account")
                 .setMessage("The account can't be deleted because there are transactions assigned to it." +

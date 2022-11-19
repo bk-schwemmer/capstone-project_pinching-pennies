@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.TransitionInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,10 +16,12 @@ import com.c196.bs_personal_finance.Entity.Category;
 import com.c196.bs_personal_finance.Entity.Transaction;
 import com.c196.bs_personal_finance.Entity.User;
 import com.c196.bs_personal_finance.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class Login extends AppCompatActivity {
+public class UserLogin extends AppCompatActivity {
 
     public static final String CURRENT_USER_ID = "currentUserID";
+    public static final String PURPOSE = "purpose";
 
     private Repository repo;
 
@@ -30,6 +31,7 @@ public class Login extends AppCompatActivity {
     private boolean loginSuccessful;
 
     private Button loginButton;
+    private FloatingActionButton addUserButton;
     private EditText usernameView;
     private EditText passwordView;
     private TextView loginErrorView;
@@ -54,13 +56,13 @@ public class Login extends AppCompatActivity {
                     loginSuccessful = foundUser.checkPassword(submittedPassword);
                 }
 
-                Login.this.runOnUiThread(() -> {
+                UserLogin.this.runOnUiThread(() -> {
                     if (loginSuccessful) {
                         Toast.makeText(
-                                Login.this,
+                                UserLogin.this,
                                 "LOGIN SUCCESSFUL",
                                 Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Login.this, Accounts.class);
+                        Intent intent = new Intent(UserLogin.this, Accounts.class);
                         intent.putExtra(CURRENT_USER_ID, foundUser.getUserID());
                         startActivity(intent);
                     } else {
@@ -70,6 +72,12 @@ public class Login extends AppCompatActivity {
             });
             getUserThread.start();
         }
+    };
+
+    private final View.OnClickListener addUser = view -> {
+        Intent intent = new Intent(UserLogin.this, UserDetails.class);
+        intent.putExtra(PURPOSE, getString(R.string.add));
+        startActivity(intent);
     };
 
 
@@ -84,11 +92,16 @@ public class Login extends AppCompatActivity {
 
         // Set Login Button listener
         loginButton.setOnClickListener(login);
+        addUserButton.setOnClickListener(addUser);
     }
 
     private void fetchUiElements() {
-        loginButton = findViewById(R.id.loginButton);
 
+        // Buttons
+        loginButton = findViewById(R.id.loginButton);
+        addUserButton = findViewById(R.id.addUserButton);
+
+        // Text
         usernameView = findViewById(R.id.username);
         passwordView = findViewById(R.id.password);
         loginErrorView = findViewById(R.id.loginError);
@@ -96,27 +109,27 @@ public class Login extends AppCompatActivity {
 
     private void createTestData() {
         // Test Users
-        User b = new User("bkschwemmer", "bks");
-        User p = new User("mjreoch", "mjr");
-
-        // Test Accounts
-        Account bCash = new Account(1, "bCash", Account.AccountType.Cash, 0.00);
-        Account bCheck = new Account(1, "bChecking", Account.AccountType.Checking, 500.00);
-        Account bLoan = new Account(1, "bCar", Account.AccountType.Debt, -12000.00);
-
-        Account pSave = new Account(2, "pSavings", Account.AccountType.Savings, 7000.00);
-        Account pCred = new Account(2, "pCredit", Account.AccountType.Credit, -3000.00);
-
-        Transaction b1 = new Transaction(1, 20.99, "Fred Meyer", "05/15/22", Transaction.Status.Reconciled, "", 1);
-        Transaction b2 = new Transaction(2, 45.56, "Costco Gas", "07/09/22", Transaction.Status.Reconciled, "", 2);
-        Transaction b3 = new Transaction(2, 328.00, "Idaho State", "11/01/22", Transaction.Status.Reconciled, "", 4);
-        Transaction b4 = new Transaction(2, 260.00, "Child Support", "11/15/22", Transaction.Status.Reconciled, "Oliver 11.15 & 11.29", 3);
-        Transaction b5 = new Transaction(2, 32.44, "Maverik", "11/15/22", Transaction.Status.Reconciled, "", 2);
-
-        Category groceries = new Category("Groceries", 0);
-        Category transportation = new Category("Transport", 0);
-        Category kids = new Category("Kids", 0);
-        Category childSupport = new Category("Child Support", 3);
+//        User b = new User("Brian Schwemmer", "bkschwemmer", "bks");
+//        User p = new User("Miranda Reoch","mjreoch", "mjr");
+//
+//        // Test Accounts
+//        Account bCash = new Account(1, "bCash", Account.AccountType.Cash, 0.00);
+//        Account bCheck = new Account(1, "bChecking", Account.AccountType.Checking, 500.00);
+//        Account bLoan = new Account(1, "bCar", Account.AccountType.Debt, -12000.00);
+//
+//        Account pSave = new Account(2, "pSavings", Account.AccountType.Savings, 7000.00);
+//        Account pCred = new Account(2, "pCredit", Account.AccountType.Credit, -3000.00);
+//
+//        Transaction b1 = new Transaction(1, 20.99, "Fred Meyer", "05/15/22", Transaction.Status.Reconciled, "", 1);
+//        Transaction b2 = new Transaction(2, 45.56, "Costco Gas", "07/09/22", Transaction.Status.Reconciled, "", 2);
+//        Transaction b3 = new Transaction(2, 328.00, "Idaho State", "11/01/22", Transaction.Status.Reconciled, "", 4);
+//        Transaction b4 = new Transaction(2, 260.00, "Child Support", "11/15/22", Transaction.Status.Reconciled, "Oliver 11.15 & 11.29", 3);
+//        Transaction b5 = new Transaction(2, 32.44, "Maverik", "11/15/22", Transaction.Status.Reconciled, "", 2);
+//
+//        Category groceries = new Category("Groceries", 0);
+//        Category transportation = new Category("Transport", 0);
+//        Category kids = new Category("Kids", 0);
+//        Category childSupport = new Category("Child Support", 3);
 
         // INSERT TEST DATA
 //        repo.insert(b);

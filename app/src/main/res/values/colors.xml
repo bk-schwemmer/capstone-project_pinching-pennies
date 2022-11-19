@@ -15,5 +15,8 @@
 
     <color name="asset_green">#445C47</color>
     <color name="liability_red">#753B3B</color>
+    <color name="light_asset_green">#7CA882</color>
+    <color name="light_liability_red">#CD6C6C</color>
+
     <color name="dark_gray">#666666</color>
 </resources>

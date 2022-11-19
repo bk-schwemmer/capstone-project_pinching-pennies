@@ -16,19 +16,17 @@ import android.widget.Toast;
 
 import com.c196.bs_personal_finance.Database.Repository;
 import com.c196.bs_personal_finance.Entity.Account;
-import com.c196.bs_personal_finance.Entity.Category;
 import com.c196.bs_personal_finance.Entity.Transaction;
 import com.c196.bs_personal_finance.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 
 public class AccountDetails extends AppCompatActivity implements AccountDeleteFragment.OnAccountDeletedListener {
 
 
     private Repository repo;
+    private String purpose;
     private long accountID;
     private long currentUserID;
     private Account currentAccount;
@@ -44,14 +42,14 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
     private Button saveButton;
     private Button deleteButton;
     private ProgressBar deletingProgress;
-    private String purpose;
+
 
     // CLICK LISTENERS
     private final View.OnClickListener cancel = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(AccountDetails.this, Accounts.class);
-            intent.putExtra(Login.CURRENT_USER_ID, currentUserID);
+            intent.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
             startActivity(intent);
         }
     };
@@ -79,7 +77,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
                 double finalNewAmount = newAmount;
 
                 // TODO DELETE
-                Toast.makeText(AccountDetails.this, "newAmount = " + newAmount, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(AccountDetails.this, "newAmount = " + newAmount, Toast.LENGTH_SHORT).show();
 
                 Thread thread = new Thread(() -> {
                     // Create new transaction from all current fields
@@ -97,7 +95,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
                                             "Account Added",
                                             Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(AccountDetails.this, Accounts.class);
-                                    intent.putExtra(Login.CURRENT_USER_ID, currentUserID);
+                                    intent.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
                                     startActivity(intent);
 
                                 } else {
@@ -122,7 +120,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
                                             Toast.LENGTH_SHORT).show();
 
                                     Intent intent = new Intent(AccountDetails.this, Accounts.class);
-                                    intent.putExtra(Login.CURRENT_USER_ID, currentUserID);
+                                    intent.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
                                     startActivity(intent);
                                 } else {
                                     Toast.makeText(
@@ -143,16 +141,6 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
             }
         }
     };
-
-//    private final View.OnClickListener deleteAccount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            Thread deleteAccountThread = new Thread(() -> {
-//                deleteAccount(currentAccount);
-//            });
-//            deleteAccountThread.start();
-//        }
-//    };
 
     private final View.OnClickListener deleteAccountAndTransactions = new View.OnClickListener() {
         @Override
@@ -195,14 +183,9 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
 
     private void assignPurpose() {
         purpose = getIntent().getStringExtra(Accounts.ACCOUNT_PURPOSE);
-        currentUserID = getIntent().getLongExtra(Login.CURRENT_USER_ID, 0);
+        currentUserID = getIntent().getLongExtra(UserLogin.CURRENT_USER_ID, 0);
 
         if (purpose.equals("ADD")) {
-
-            // TODO Do these need to be assigned for ADD transactions?
-//            transactionID = getIntent().getLongExtra(Transactions.SELECTED_TRANSACTION_ID, 0);
-//            currentTransaction = repo.getTransactionByID(transactionID);
-//            currentAccountID = currentTransaction.getAccountID();
             setTitle(getString(R.string.add_account));
             accountName = "";
             accountBalance = "";
@@ -212,7 +195,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
             accountID = getIntent().getLongExtra(Accounts.CURRENT_ACCOUNT_ID, 0);
             currentAccount = repo.getAccountByID(accountID);
 
-            setTitle(getString(R.string.acount_details));
+            setTitle(getString(R.string.account_details));
             accountName = currentAccount.getAccountName();
             accountBalance = currentAccount.getCurrentBalanceString();
             accountType = currentAccount.getType();
@@ -260,30 +243,12 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
         typeDropdownThread.start();
     }
 
-    private void fetchUiElements() {
-
-        // Text Views
-        nameEdit = findViewById(R.id.nameEdit);
-        balanceEdit = findViewById(R.id.balanceEdit);
-
-        // Dropdown Lists
-        typeDropdown = findViewById(R.id.accountTypeDropdown);
-
-        // Buttons
-        cancelButton = findViewById(R.id.cancelButton);
-        saveButton = findViewById(R.id.saveButton);
-        deleteButton = findViewById(R.id.deleteButton);
-
-        // Progress Bars
-        deletingProgress = findViewById(R.id.deletingProgressBar);
-    }
-
     private void loadDeleteButton() {
         deleteButton.setVisibility(View.VISIBLE);
         deleteButton.setOnClickListener(deleteAccountAndTransactions);
     }
 
-    public void deleteAccount(Account account) {
+    private void deleteAccount(Account account) {
         AccountDetails.this.runOnUiThread(() -> deletingProgress.setVisibility(View.VISIBLE));
 
         if (repo.delete(account) < 1) {
@@ -295,7 +260,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
             AccountDetails.this.runOnUiThread(() -> {
                 Toast.makeText(this, "Account Deleted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(AccountDetails.this, Accounts.class);
-                intent.putExtra(Login.CURRENT_USER_ID, currentUserID);
+                intent.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
                 startActivity(intent);
                 deletingProgress.setVisibility(View.GONE);
             });
@@ -328,5 +293,23 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
             }
         });
         thread.start();
+    }
+
+    private void fetchUiElements() {
+
+        // Text Views
+        nameEdit = findViewById(R.id.nameEdit);
+        balanceEdit = findViewById(R.id.balanceEdit);
+
+        // Dropdown Lists
+        typeDropdown = findViewById(R.id.accountTypeDropdown);
+
+        // Buttons
+        cancelButton = findViewById(R.id.cancelButton);
+        saveButton = findViewById(R.id.saveButton);
+        deleteButton = findViewById(R.id.deleteButton);
+
+        // Progress Bars
+        deletingProgress = findViewById(R.id.deletingProgressBar);
     }
 }

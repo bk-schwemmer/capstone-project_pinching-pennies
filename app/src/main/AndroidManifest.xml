@@ -14,6 +14,9 @@
         android:theme="@style/Theme.BS_personal_finance"
         tools:targetApi="31">
         <activity
+            android:name=".UI.UserDetails"
+            android:exported="false" />
+        <activity
             android:name=".UI.AccountDetails"
             android:exported="false" />
         <activity
@@ -29,7 +32,7 @@
             android:name=".UI.CreateUser"
             android:exported="false" />
         <activity
-            android:name=".UI.Login"
+            android:name=".UI.UserLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

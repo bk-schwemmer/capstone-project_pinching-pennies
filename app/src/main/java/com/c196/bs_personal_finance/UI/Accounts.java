@@ -1,16 +1,14 @@
 package com.c196.bs_personal_finance.UI;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,6 +51,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
 
     private int mCurrentItemPosition;
     private Choice selectedList;
+    private CardView mAccountCard;
 
     private enum Choice { ASSET, LIABILITY }
 
@@ -63,7 +62,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
     // CLICK LISTENERS
     private final View.OnClickListener addAccount = view -> {
         Intent intent = new Intent(Accounts.this, AccountDetails.class);
-        intent.putExtra(Login.CURRENT_USER_ID, currentUserID);
+        intent.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
         intent.putExtra(ACCOUNT_PURPOSE, getString(R.string.add));
         startActivity(intent);
     };
@@ -91,8 +90,14 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.userDetails:
+                Intent toUserDetails = new Intent(Accounts.this, UserDetails.class);
+                toUserDetails.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
+                toUserDetails.putExtra(UserLogin.PURPOSE, getString(R.string.modify));
+                startActivity(toUserDetails);
+                return true;
             case R.id.logout:
-                Intent toLoginScreen = new Intent(Accounts.this, Login.class);
+                Intent toLoginScreen = new Intent(Accounts.this, UserLogin.class);
                 startActivity(toLoginScreen);
                 return true;
 
@@ -101,38 +106,9 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         }
     }
 
-    public boolean addAccount(long userID, String accountName, Account.AccountType accountType,
-                            double currentBalance) {
-
-        // Search current accounts for duplicate names
-        List<Account> allUserAccounts = repo.getAccountsByUser(userID);
-        for (Account account: allUserAccounts) {
-            if (account.getAccountName().equalsIgnoreCase(accountName)) {
-                Toast.makeText(
-                        Accounts.this,
-                        "An account with this name already exists.",
-                        Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-
-        // Create new account and attempt to add to database
-        Account accountToAdd = new Account(userID,accountName, accountType, currentBalance);
-        long newAccountID = repo.insert(accountToAdd);
-        if (newAccountID > 0) {
-            return true;
-        } else {
-            Toast.makeText(
-                    Accounts.this,
-                    "Unable to add account. Please try again",
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
     private void populateAccountsRecycler() {
 
-        currentUserID = getIntent().getLongExtra(Login.CURRENT_USER_ID, 0);
+        currentUserID = getIntent().getLongExtra(UserLogin.CURRENT_USER_ID, 0);
         List<Account> allUserAccounts = repo.getAccountsByUser(currentUserID);
         List<Account> assetAccounts = new ArrayList<>();
         List<Account> liabilityAccounts = new ArrayList<>();
@@ -214,6 +190,14 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         public AccountHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.recyclerview_account_card, parent, false));
             itemView.setOnClickListener(this);
+            mAccountCard = itemView.findViewById(R.id.accountCardView);
+            System.out.println(parent.toString());
+//            String s = "asset";
+            if ((parent.toString()).contains("asset")) {
+                mAccountCard.setCardBackgroundColor(getColor(R.color.light_asset_green));
+            } else {
+                mAccountCard.setCardBackgroundColor(getColor(R.color.light_liability_red));
+            }
             mNameView = itemView.findViewById(R.id.accountNameCardText);
             mBalanceView = itemView.findViewById(R.id.accountBalanceCardText);
         }
@@ -235,7 +219,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
             selectedAccount = mAccount;
 
             Intent intent = new Intent(Accounts.this, Transactions.class);
-            intent.putExtra(Login.CURRENT_USER_ID, mAccount.getUserID());
+            intent.putExtra(UserLogin.CURRENT_USER_ID, mAccount.getUserID());
             intent.putExtra(CURRENT_ACCOUNT_ID, mAccount.getAccountID());
             startActivity(intent);
         }
@@ -264,14 +248,11 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         @Override
         public void onBindViewHolder(@NonNull AccountHolder holder, int position) {
             holder.bind(mAccountList.get(position), position);
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (mOnLongItemClickListener != null) {
-                        mOnLongItemClickListener.ItemLongClicked(view, holder.getBindingAdapterPosition());
-                    }
-                    return false;
+            holder.itemView.setOnLongClickListener(view -> {
+                if (mOnLongItemClickListener != null) {
+                    mOnLongItemClickListener.ItemLongClicked(view, holder.getBindingAdapterPosition());
                 }
+                return false;
             });
         }
 
@@ -299,7 +280,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         switch (item.getItemId()) {
             case R.id.accountDetails:
                 Intent intent = new Intent(Accounts.this, AccountDetails.class);
-                intent.putExtra(Login.CURRENT_USER_ID, selectedAccount.getUserID());
+                intent.putExtra(UserLogin.CURRENT_USER_ID, selectedAccount.getUserID());
                 intent.putExtra(CURRENT_ACCOUNT_ID, selectedAccount.getAccountID());
                 intent.putExtra(ACCOUNT_PURPOSE, getString(R.string.modify));
                 startActivity(intent);
@@ -346,7 +327,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
             Accounts.this.runOnUiThread(() -> {
                 Toast.makeText(this, "Account Deleted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Accounts.this, Accounts.class);
-                intent.putExtra(Login.CURRENT_USER_ID, currentUserID);
+                intent.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
                 startActivity(intent);
                 deletingProgress.setVisibility(View.GONE);
             });
