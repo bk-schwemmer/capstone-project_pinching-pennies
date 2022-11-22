@@ -23,6 +23,14 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/transactionHeading" />
 
+    <ListView
+        android:id="@+id/searchResultsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/transactionSearch"
+        android:visibility="gone"
+        />
+
     <ExpandableListView
         android:id="@+id/transactionsExpandableList"
         android:layout_width="match_parent"
