@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,9 @@ import com.c196.bs_personal_finance.Entity.Transaction;
 import com.c196.bs_personal_finance.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Type;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +47,19 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
     private AccountAdapter mAssetsAccountAdapter;
     private AccountAdapter mLiabilitiesAccountAdapter;
     private Account selectedAccount;
+    private long currentUserID;
+    private int mCurrentItemPosition;
+
+    private LinearLayout assetLayout;
+    private LinearLayout liabilityLayout;
+    private TextView noAccounts;
     private RecyclerView mAssetRecyclerView;
     private RecyclerView mLiabilityRecyclerView;
-    private long currentUserID;
     private FloatingActionButton addAccountButton;
     private ProgressBar deletingProgress;
-
-    private int mCurrentItemPosition;
-    private Choice selectedList;
     private CardView mAccountCard;
+
+    private Choice selectedList;
 
     private enum Choice { ASSET, LIABILITY }
 
@@ -66,7 +74,6 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         intent.putExtra(ACCOUNT_PURPOSE, getString(R.string.add));
         startActivity(intent);
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +103,13 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
                 toUserDetails.putExtra(UserLogin.PURPOSE, getString(R.string.modify));
                 startActivity(toUserDetails);
                 return true;
+
+            case R.id.reports:
+                Intent toReports = new Intent(Accounts.this, Reports.class);
+                toReports.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
+                startActivity(toReports);
+                return true;
+
             case R.id.logout:
                 Intent toLoginScreen = new Intent(Accounts.this, UserLogin.class);
                 startActivity(toLoginScreen);
@@ -104,6 +118,23 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void fetchUiElements() {
+        // Recyclers
+        mAssetRecyclerView = findViewById(R.id.assetAccountsRecycler);
+        mLiabilityRecyclerView = findViewById(R.id.liabilityAccountsRecycler);
+
+        // Layouts
+        assetLayout = findViewById(R.id.assetLayout);
+        liabilityLayout = findViewById(R.id.liabilityLayout);
+        noAccounts = findViewById(R.id.noAccounts);
+
+        // Progress
+        deletingProgress = findViewById(R.id.deletingProgressBar);
+
+        // Button
+        addAccountButton = findViewById(R.id.addAccountButton);
     }
 
     private void populateAccountsRecycler() {
@@ -121,6 +152,18 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
             } else {
                 unsortedAccounts.add(account);
             }
+        }
+
+        if (assetAccounts.size() == 0) {
+            assetLayout.setVisibility(View.GONE);
+        }
+        if (liabilityAccounts.size() == 0) {
+            liabilityLayout.setVisibility(View.GONE);
+            assetLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
+        if ((assetAccounts.size() == 0) && (liabilityAccounts.size() == 0)) {
+            noAccounts.setVisibility(View.VISIBLE);
         }
 
         // TODO DELETE
@@ -313,6 +356,17 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         }
     }
 
+    @Override
+    public void onDeleteOverride() {
+        deletingProgress.setVisibility(View.VISIBLE);
+        Thread thread = new Thread(() -> {
+            if (deleteTransactionsInAccount(selectedAccount)) {
+                deleteAccount(selectedAccount);
+            }
+        });
+        thread.start();
+    }
+
     public void deleteAccount(Account account) {
         Accounts.this.runOnUiThread(() -> {
             deletingProgress.setVisibility(View.VISIBLE);
@@ -350,24 +404,4 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
 
         return deleteSuccessful;
     }
-
-    @Override
-    public void onDeleteOverride() {
-        deletingProgress.setVisibility(View.VISIBLE);
-        Thread thread = new Thread(() -> {
-            if (deleteTransactionsInAccount(selectedAccount)) {
-                deleteAccount(selectedAccount);
-            }
-        });
-        thread.start();
-    }
-
-    private void fetchUiElements() {
-        mAssetRecyclerView = findViewById(R.id.assetAccountsRecycler);
-        mLiabilityRecyclerView = findViewById(R.id.liabilityAccountsRecycler);
-
-        deletingProgress = findViewById(R.id.deletingProgressBar);
-        addAccountButton = findViewById(R.id.addAccountButton);
-    }
-
 }

@@ -35,6 +35,7 @@ import java.util.Objects;
 
 public class TransactionDetails extends AppCompatActivity {
 
+    // Members
     private Repository repo;
     private long transactionID;
     private long currentAccountID;
@@ -47,6 +48,7 @@ public class TransactionDetails extends AppCompatActivity {
     private Category category;
     private Transaction.Status status;
 
+    // Views
     private EditText payeeEdit;
     private EditText amountEdit;
     private TextView dateView;
@@ -62,7 +64,7 @@ public class TransactionDetails extends AppCompatActivity {
 
     // Dates
     final Calendar calendar = Calendar.getInstance();
-    final String dateFormat = "MM/dd/yy";
+    final String dateFormat = "MM/dd/yyyy";
     final SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
     final String currentDate = sdf.format(new Date());
     private DatePickerDialog.OnDateSetListener setDate;
@@ -224,8 +226,12 @@ public class TransactionDetails extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            new DatePickerDialog(TransactionDetails.this, setDate, calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            new DatePickerDialog(
+                    TransactionDetails.this,
+                    setDate,
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)).show();
         }
     };
 
@@ -269,11 +275,6 @@ public class TransactionDetails extends AppCompatActivity {
 
         if (transactionPurpose.equals("ADD")) {
 
-            // TODO Do these need to be assigned for ADD transactions?
-//            transactionID = getIntent().getLongExtra(Transactions.SELECTED_TRANSACTION_ID, 0);
-//            currentTransaction = repo.getTransactionByID(transactionID);
-//            currentAccountID = currentTransaction.getAccountID();
-
             currentAccountID = getIntent().getLongExtra(Accounts.CURRENT_ACCOUNT_ID, 0);
             setTitle(getString(R.string.add_transaction));
             payee = "";
@@ -299,10 +300,29 @@ public class TransactionDetails extends AppCompatActivity {
         }
     }
 
+    private void fetchUiElements() {
+
+        // Text Views
+        payeeEdit = findViewById(R.id.payeeEdit);
+        amountEdit = findViewById(R.id.amountEdit);
+        dateView = findViewById(R.id.dateView);
+        notesEdit = findViewById(R.id.notesEdit);
+
+        // Dropdown Lists
+        categoryDropdown = findViewById(R.id.categoryDropdown);
+        statusDropdown = findViewById(R.id.statusDropdown);
+
+        // Buttons
+        cancelButton = findViewById(R.id.cancelButton);
+        saveButton = findViewById(R.id.saveButton);
+        deleteButton = findViewById(R.id.deleteButton);
+        datePicker = findViewById(R.id.datePickerButton);
+
+        // Progress Bars
+        deletingProgress = findViewById(R.id.deletingProgressBar);
+    }
+
     private void populateDetails() {
-//        transactionID = getIntent().getLongExtra(Transactions.SELECTED_TRANSACTION_ID, 0);
-//        currentTransaction = repo.getTransactionByID(transactionID);
-//        currentAccountID = currentTransaction.getAccountID();
 
         payeeEdit.setText(payee);
         amountEdit.setText(amount);
@@ -381,28 +401,6 @@ public class TransactionDetails extends AppCompatActivity {
         if (statusString != null && selectedStatus != null) {
             statusDropdown.setSelection(adapter.getPosition(statusString));
         }
-    }
-
-    private void fetchUiElements() {
-
-        // Text Views
-        payeeEdit = findViewById(R.id.payeeEdit);
-        amountEdit = findViewById(R.id.amountEdit);
-        dateView = findViewById(R.id.dateView);
-        notesEdit = findViewById(R.id.notesEdit);
-
-        // Dropdown Lists
-        categoryDropdown = findViewById(R.id.categoryDropdown);
-        statusDropdown = findViewById(R.id.statusDropdown);
-
-        // Buttons
-        cancelButton = findViewById(R.id.cancelButton);
-        saveButton = findViewById(R.id.saveButton);
-        deleteButton = findViewById(R.id.deleteButton);
-        datePicker = findViewById(R.id.datePickerButton);
-
-        // Progress Bars
-        deletingProgress = findViewById(R.id.deletingProgressBar);
     }
 
     private void loadDeleteButton() {

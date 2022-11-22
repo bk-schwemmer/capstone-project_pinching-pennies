@@ -181,6 +181,24 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
         saveButton.setOnClickListener(save);
     }
 
+    private void fetchUiElements() {
+
+        // Text Views
+        nameEdit = findViewById(R.id.nameEdit);
+        balanceEdit = findViewById(R.id.balanceEdit);
+
+        // Dropdown Lists
+        typeDropdown = findViewById(R.id.accountTypeDropdown);
+
+        // Buttons
+        cancelButton = findViewById(R.id.cancelButton);
+        saveButton = findViewById(R.id.saveButton);
+        deleteButton = findViewById(R.id.deleteButton);
+
+        // Progress Bars
+        deletingProgress = findViewById(R.id.deletingProgressBar);
+    }
+
     private void assignPurpose() {
         purpose = getIntent().getStringExtra(Accounts.ACCOUNT_PURPOSE);
         currentUserID = getIntent().getLongExtra(UserLogin.CURRENT_USER_ID, 0);
@@ -293,23 +311,5 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
             }
         });
         thread.start();
-    }
-
-    private void fetchUiElements() {
-
-        // Text Views
-        nameEdit = findViewById(R.id.nameEdit);
-        balanceEdit = findViewById(R.id.balanceEdit);
-
-        // Dropdown Lists
-        typeDropdown = findViewById(R.id.accountTypeDropdown);
-
-        // Buttons
-        cancelButton = findViewById(R.id.cancelButton);
-        saveButton = findViewById(R.id.saveButton);
-        deleteButton = findViewById(R.id.deleteButton);
-
-        // Progress Bars
-        deletingProgress = findViewById(R.id.deletingProgressBar);
     }
 }

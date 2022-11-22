@@ -37,7 +37,7 @@ public interface TransactionDAO {
     @Query("SELECT * FROM transactions WHERE payee = :payee")
     Transaction getTransactionByPayee(String payee);
 
-    @Query("SELECT * FROM transactions WHERE accountID = :acctID AND category = :catID")
-    List<Transaction> getTransactionsByCategory(long acctID, long catID);
+    @Query("SELECT * FROM transactions WHERE accountID IN (SELECT accountID FROM accounts WHERE userID = :userID) AND category = :catID")
+    List<Transaction> getAllUserTransactionsByCategory(long userID, long catID);
 
 }

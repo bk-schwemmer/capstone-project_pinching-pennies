@@ -17,6 +17,12 @@
         android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <SearchView
+        android:id="@+id/transactionSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/transactionHeading" />
+
     <ExpandableListView
         android:id="@+id/transactionsExpandableList"
         android:layout_width="match_parent"
@@ -25,7 +31,7 @@
         android:dividerHeight="1.0dp"
         android:paddingBottom="100dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/transactionHeading" />
+        app:layout_constraintTop_toBottomOf="@id/transactionSearch" />
 
     <TextView
         android:id="@+id/noTransactions"

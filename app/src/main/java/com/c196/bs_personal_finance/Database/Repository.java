@@ -244,8 +244,8 @@ public class Repository {
         return mTransactions;
     }
 
-    public List<Transaction> getTransactionsByCategory(long acctID, long catID) {
-        databaseExecutor.execute(()-> mTransactions = mTransactionDAO.getTransactionsByCategory(acctID, catID));
+    public List<Transaction> getAllUserTransactionsByCategory(long userID, long catID) {
+        databaseExecutor.execute(()-> mTransactions = mTransactionDAO.getAllUserTransactionsByCategory(userID, catID));
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

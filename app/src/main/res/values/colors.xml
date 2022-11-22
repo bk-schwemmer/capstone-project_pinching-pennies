@@ -9,14 +9,16 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#7E0000</color>
 
-    <color name="colorPrimary">#495B29</color>
-    <color name="colorPrimaryDark">#232C14</color>
+    <color name="colorPrimary">#58AFC5</color>
+    <color name="colorPrimaryDark">#264B55</color>
     <color name="colorAccent">#B89E5E</color>
 
-    <color name="asset_green">#445C47</color>
-    <color name="liability_red">#753B3B</color>
-    <color name="light_asset_green">#7CA882</color>
-    <color name="light_liability_red">#CD6C6C</color>
+    <color name="asset_green">#505E52</color>
+    <color name="liability_red">#7C5858</color>
+    <color name="light_asset_green">#90AC94</color>
+    <color name="light_liability_red">#D3A2A2</color>
 
     <color name="dark_gray">#666666</color>
+    <color name="mid_gray">#C1C1C1</color>
+    <color name="light_gray">#E3E3E3</color>
 </resources>

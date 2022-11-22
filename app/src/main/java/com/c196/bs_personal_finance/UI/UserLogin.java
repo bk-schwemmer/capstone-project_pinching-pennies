@@ -18,6 +18,9 @@ import com.c196.bs_personal_finance.Entity.User;
 import com.c196.bs_personal_finance.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserLogin extends AppCompatActivity {
 
     public static final String CURRENT_USER_ID = "currentUserID";
@@ -88,6 +91,7 @@ public class UserLogin extends AppCompatActivity {
 
         repo = new Repository(getApplication());
         fetchUiElements();
+        addCategories();
         createTestData();
 
         // Set Login Button listener
@@ -105,6 +109,37 @@ public class UserLogin extends AppCompatActivity {
         usernameView = findViewById(R.id.username);
         passwordView = findViewById(R.id.password);
         loginErrorView = findViewById(R.id.loginError);
+    }
+
+    private void addCategories() {
+
+        Thread fetchCategories = new Thread(() -> {
+            if (repo.getAllCategories().size() == 0) {
+                List<Category> categories = new ArrayList<>();
+                categories.add(new Category("Debt", 0));
+                categories.add(new Category("Education", 0));
+                categories.add(new Category("Entertainment", 0));
+                categories.add(new Category("Fees", 0));
+                categories.add(new Category("Food", 0));
+                categories.add(new Category("Gift", 0));
+                categories.add(new Category("Health", 0));
+                categories.add(new Category("Home", 0));
+                categories.add(new Category("Income", 0));
+                categories.add(new Category("Investments", 0));
+                categories.add(new Category("Kids", 0));
+                categories.add(new Category("Misc", 0));
+                categories.add(new Category("Pets", 0));
+                categories.add(new Category("Taxes", 0));
+                categories.add(new Category("Transfer", 0));
+                categories.add(new Category("Transport", 0));
+                categories.add(new Category("Utilities", 0));
+
+                for (Category category : categories) {
+                    repo.insert(category);
+                }
+            }
+        });
+        fetchCategories.start();
     }
 
     private void createTestData() {

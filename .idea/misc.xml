@@ -17,11 +17,13 @@
         <entry key="app/src/main/res/layout/screen_account_details.xml" value="0.32864583333333336" />
         <entry key="app/src/main/res/layout/screen_accounts.xml" value="0.3145833333333333" />
         <entry key="app/src/main/res/layout/screen_login.xml" value="0.34375" />
+        <entry key="app/src/main/res/layout/screen_reports.xml" value="0.28055555555555556" />
         <entry key="app/src/main/res/layout/screen_transaction_details.xml" value="0.3145833333333333" />
         <entry key="app/src/main/res/layout/screen_transactions.xml" value="0.32864583333333336" />
         <entry key="app/src/main/res/layout/screen_user_details.xml" value="0.34375" />
         <entry key="app/src/main/res/menu/menu_account_context.xml" value="0.575" />
         <entry key="app/src/main/res/menu/menu_accounts.xml" value="0.32760416666666664" />
+        <entry key="app/src/main/res/menu/menu_reports.xml" value="0.28055555555555556" />
         <entry key="app/src/main/res/menu/menu_transaction_details.xml" value="0.32760416666666664" />
         <entry key="app/src/main/res/menu/menu_transactions.xml" value="0.32864583333333336" />
       </map>

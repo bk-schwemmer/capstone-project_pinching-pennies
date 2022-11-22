@@ -44,7 +44,24 @@
         <item name="android:src">@drawable/add</item>
         <item name="tint">@color/white</item>
         <item name="backgroundTint">@color/black</item>
+    </style>
 
+    <style name="dialogTheme" parent="android:Theme.Material.Dialog.Alert">
+        <item name="android:datePickerStyle">@style/datePickerSpinner</item>
+    </style>
+
+    <style name="datePickerSpinner" parent="android:Theme.Material.Dialog.Alert">
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:calendarViewShown">false</item>
+    </style>
+
+    <style name="progressBar">
+        <item name="color">@color/colorAccent</item>
+    </style>
+
+    <style name="normalButtons" parent="android:Widget.Button">
+        <item name="backgroundColor">@color/colorPrimaryDark</item>
+        <item name="textFillColor">@color/white</item>
     </style>
 
 </resources>

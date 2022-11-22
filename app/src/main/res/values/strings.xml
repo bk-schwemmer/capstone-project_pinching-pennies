@@ -1,22 +1,62 @@
 <resources>
+
+    // Login
     <string name="app_name">BROKE</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
     <string name="login_issue">No matching username/password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="calendar">calendar</string>
+
+    // Buttons
+    <string name="ok">OK</string>
+    <string name="modify">MODIFY</string>
+    <string name="add">ADD</string>
+    <string name="cancel">CANCEL</string>
+    <string name="save">SAVE</string>
+
+    // Warning Dialog
+    <string name="incomplete">Incomplete Information</string>
+    <string name="incomplete_message">Please fill out all fields to continue.</string>
+
+    // Menu
+    <string name="reports">Reports</string>
+    <string name="logout">Logout</string>
+
+    // User
+    <string name="add_user">Add New User</string>
+    <string name="new_user">New User</string>
+    <string name="delete_user">Delete User</string>
+    <string name="user_details">User Details</string>
+    <string name="name">Name</string>
+
+    // Account
+    <string name="accounts">Accounts</string>
+    <string name="account_type">Account Type</string>
+    <string name="add_account">Add Account</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="account_name">Account Name</string>
+    <string name="no_accounts">This user has no accounts.\nAdd an account to proceed.</string>
+    <string name="account_details">Account Details</string>
+    <string name="current_balance">Current Balance</string>
     <string name="assets">Assets</string>
     <string name="liabilities">Liabilities</string>
+    <string name="zero_dollars">$00.00</string>
+
+    // Transaction
     <string name="transactions">Transactions</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="delete_transaction">DELETE TRANSACTION</string>
     <string name="payee">Payee</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
@@ -24,32 +64,25 @@
     <string name="notes">Notes</string>
     <string name="status">Status</string>
     <string name="transaction_details">Transaction Details</string>
-    <string name="calendar">calendar</string>
-    <string name="add_account">Add Account</string>
-    <string name="account_name">Account Name</string>
-    <string name="current_balance">Current Balance</string>
-    <string name="cancel">CANCEL</string>
-    <string name="save">SAVE</string>
-    <string name="zero_dollars">$00.00</string>
-    <string name="delete_transaction">DELETE TRANSACTION</string>
-
-    // Warning Dialog
-    <string name="incomplete">Incomplete Information</string>
-    <string name="incomplete_message">Please fill out all fields to continue.</string>
-    <string name="ok">OK</string>
-    <string name="add_transaction">Add Transaction</string>
-    <string name="modify">MODIFY</string>
-    <string name="add">ADD</string>
-    <string name="logout">Logout</string>
-    <string name="accounts">Accounts</string>
-    <string name="account_type">Account Type</string>
     <string name="no_transactions">No applicable transactions have been added yet.\n Add a transaction to proceed.</string>
-    <string name="account_details">Account Details</string>
-    <string name="delete_account">Delete Account</string>
-    <string name="add_user">Add New User</string>
-    <string name="new_user">New User</string>
-    <string name="name">Name</string>
-    <string name="user_details">User Details</string>
-    <string name="delete_user">Delete User</string>
 
+    // Date Picker
+    <string name="set_month">Set Month</string>
+    <string name="set_year">Set Year</string>
+
+    // Category Dropdown
+    <string name="select_categories">Select Categories</string>
+    <string name="change_categories">Change Categories</string>
+    <string name="clear_all">Clear All</string>
+
+    // Report
+    <string name="type">Type</string>
+    <string name="prepare_report">Please complete all selections above to generate a report</string>
+    <string name="categories">Categories</string>
+    <string name="difference">Difference</string>
+    <string name="transaction_heading_placeholder">Transaction Heading Placeholder</string>
+    <string name="account">Account</string>
+    <string name="search">Search</string>
+
+    <string name="search_hint">Search transactions</string>
 </resources>

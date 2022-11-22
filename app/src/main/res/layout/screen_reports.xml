@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.Reports">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="@dimen/spacing_large">
+
+        <!-- Categories -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/spacing_large"
+            android:paddingEnd="@dimen/spacing_large"
+            android:divider="@drawable/spacer_huge"
+            android:showDividers="middle">
+
+            <TextView
+                style="@style/detailLabel"
+                android:text="@string/categories" />
+
+            <TextView
+                android:id="@+id/categoryDropdown"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="@string/select_categories"
+                android:padding="@dimen/spacing_small"
+                app:drawableRightCompat="@drawable/arrow_drop_down"/>
+        </LinearLayout>
+
+        <!-- Type -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/spacing_large"
+            android:paddingEnd="@dimen/spacing_large"
+            android:divider="@drawable/spacer_huge"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/typeLabel"
+                style="@style/detailLabel"
+                android:text="Type" />
+
+            <Spinner
+                android:id="@+id/reportTypeSpinner"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:prompt="@string/type"
+                android:padding="@dimen/spacing_small"/>
+        </LinearLayout>
+
+        <!-- Start Date -->
+        <LinearLayout
+            android:id="@+id/timeframeStartLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/spacing_large"
+            android:paddingEnd="@dimen/spacing_large"
+            android:divider="@drawable/spacer_huge"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/timeframeStartLabel"
+                style="@style/detailLabel"
+                android:text="Start" />
+
+            <Button
+                android:id="@+id/timeframeStartPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Date"/>
+
+        </LinearLayout>
+
+        <!-- Stop Date -->
+        <LinearLayout
+            android:id="@+id/timeframeEndLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/spacing_large"
+            android:paddingEnd="@dimen/spacing_large"
+            android:divider="@drawable/spacer_huge"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/timeframeEndLabel"
+                style="@style/detailLabel"
+                android:text="End" />
+
+            <Button
+                android:id="@+id/timeframeEndPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Date"/>
+
+        </LinearLayout>
+
+        <!-- Report Not Ready -->
+        <TextView
+            android:id="@+id/reportNotReady"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/prepare_report"
+            android:padding="@dimen/spacing_huge"
+            android:gravity="center" />
+
+        <TableLayout
+            android:id="@+id/reportTable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/spacing_huge" >
+
+        </TableLayout>
+
+    </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

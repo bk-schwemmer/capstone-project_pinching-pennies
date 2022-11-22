@@ -14,44 +14,67 @@
             android:gravity="center"
             >
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/assetLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/assets"
-                android:padding="@dimen/spacing_medium"
-                android:textSize="20sp"
-                android:background="@color/black"
-                android:textColor="@color/white"
-                />
+                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/assetTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/assets"
+                        android:padding="@dimen/spacing_medium"
+                        android:textSize="20sp"
+                        android:background="@color/black"
+                        android:textColor="@color/white"
+                        />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/assetAccountsRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/asset_green"
-                android:padding="20dp"
-                android:paddingBottom="100dp"
-                android:clipToPadding="false"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/assetAccountsRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/asset_green"
+                        android:padding="20dp"
+                        android:paddingBottom="100dp"
+                        android:clipToPadding="false"/>
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/liabilities"
-                android:padding="@dimen/spacing_medium"
-                android:textSize="20sp"
-                android:background="@color/black"
-                android:textColor="@color/white"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/liabilityAccountsRecycler"
+            <LinearLayout
+                android:id="@+id/liabilityLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/liability_red"
-                android:padding="20dp"
-                android:paddingBottom="100dp"
-                android:clipToPadding="false" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/liabilityTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/liabilities"
+                    android:padding="@dimen/spacing_medium"
+                    android:textSize="20sp"
+                    android:background="@color/black"
+                    android:textColor="@color/white"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/liabilityAccountsRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/liability_red"
+                    android:padding="20dp"
+                    android:paddingBottom="100dp"
+                    android:clipToPadding="false" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/noAccounts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/no_accounts"
+                android:gravity="center"
+                android:visibility="gone" />
 
         </LinearLayout>
 

@@ -2,12 +2,15 @@ package com.c196.bs_personal_finance.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ public class Transactions extends AppCompatActivity {
 
     private TextView noTransactionsView;
     private TextView transactionHeading;
+    private SearchView searchBar;
     private FloatingActionButton addTransactionButton;
 
     // CLICK LISTENERS
@@ -47,10 +51,18 @@ public class Transactions extends AppCompatActivity {
         startActivity(intent);
     };
 
+    private final View.OnClickListener onSearch = view -> {
+        Intent intent = new Intent(Transactions.this, TransactionDetails.class);
+        intent.putExtra(Accounts.CURRENT_ACCOUNT_ID, currentAccountID);
+        intent.putExtra(TRANSACTION_PURPOSE, getString(R.string.add));
+        startActivity(intent);
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_transactions);
+        setTitle(getString(R.string.transactions));
 
         repo = new Repository(getApplication());
         fetchUiElements();
@@ -62,21 +74,33 @@ public class Transactions extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_transactions, menu);
+
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        SearchView searchView = (SearchView) menu.findItem(R.id.transactionSearch).getActionView();
+
+
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.logout:
-                Intent toLoginScreen = new Intent(Transactions.this, UserLogin.class);
-                startActivity(toLoginScreen);
-                return true;
-
             case R.id.accounts:
                 Intent toAccountsScreen = new Intent(Transactions.this, Accounts.class);
                 toAccountsScreen.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
                 startActivity(toAccountsScreen);
+                return true;
+
+            case R.id.reports:
+                Intent toReports = new Intent(Transactions.this, Reports.class);
+                toReports.putExtra(UserLogin.CURRENT_USER_ID, currentUserID);
+                startActivity(toReports);
+                return true;
+
+            case R.id.logout:
+                Intent toLoginScreen = new Intent(Transactions.this, UserLogin.class);
+                startActivity(toLoginScreen);
                 return true;
 
             default:
@@ -84,11 +108,21 @@ public class Transactions extends AppCompatActivity {
         }
     }
 
+    private void fetchUiElements() {
+        expandableListView = findViewById(R.id.transactionsExpandableList);
+        addTransactionButton = findViewById(R.id.addTransactionButton);
+        noTransactionsView = findViewById(R.id.noTransactions);
+        searchBar = findViewById(R.id.transactionSearch);
+        transactionHeading = findViewById(R.id.transactionHeading);
+    }
+
     private void populateTransactionsList() {
         currentAccountID = getIntent().getLongExtra(Accounts.CURRENT_ACCOUNT_ID, 0);
         currentUserID = repo.getAccountByID(currentAccountID).getUserID();
-
-        setTitle(repo.getAccountByID(currentAccountID).getAccountName());
+        StringBuilder heading = new StringBuilder();
+        heading.append(repo.getAccountByID(currentAccountID).getAccountName());
+        heading.append(" ").append(getString(R.string.account));
+        transactionHeading.setText(heading);
 
         createTransactionHashMap();
         expandableListTitle = new ArrayList<>(expandableListDetail.keySet());
@@ -186,12 +220,5 @@ public class Transactions extends AppCompatActivity {
             System.out.println("#" + index + ": " + entry.getKey() + " | " + entry.getValue());
             index++;
         }
-    }
-
-    private void fetchUiElements() {
-        expandableListView = findViewById(R.id.transactionsExpandableList);
-        addTransactionButton = findViewById(R.id.addTransactionButton);
-        noTransactionsView = findViewById(R.id.noTransactions);
-        transactionHeading = findViewById(R.id.transactionHeading);
     }
 }
