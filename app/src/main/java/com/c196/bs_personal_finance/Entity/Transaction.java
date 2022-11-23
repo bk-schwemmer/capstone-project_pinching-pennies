@@ -1,5 +1,6 @@
 package com.c196.bs_personal_finance.Entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -118,6 +119,7 @@ public class Transaction {
         this.category = category;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Transaction{" +
@@ -126,22 +128,6 @@ public class Transaction {
                 ", amount=" + amount +
                 ", payee='" + payee + '\'' +
                 '}';
-    }
-
-    public static String statusToString(Status status) {
-        switch (status) {
-            case Pending:
-                return "Pending";
-            case Estimate:
-                return "Estimate";
-            case Future:
-                return "Future";
-            case Reconciled:
-                return "Reconciled";
-
-            default:
-                return "";
-        }
     }
 
     public static Status stringToStatus(String statusString) {

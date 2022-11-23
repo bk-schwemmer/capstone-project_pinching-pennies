@@ -7,8 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,7 +36,6 @@ public class TransactionDetails extends AppCompatActivity {
 
     // Members
     private Repository repo;
-    private long transactionID;
     private long currentAccountID;
     private Transaction currentTransaction;
     private Transaction newTransaction;
@@ -83,7 +81,6 @@ public class TransactionDetails extends AppCompatActivity {
     private final View.OnClickListener save = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
             String newPayee = payeeEdit.getText().toString();
 
             // Validate Double
@@ -100,12 +97,7 @@ public class TransactionDetails extends AppCompatActivity {
                 alertDialog.show();
             } else {
                 newAmount = Double.parseDouble(newAmountString);
-
                 double finalNewAmount = newAmount;
-
-                // TODO DELETE
-//                Toast.makeText(TransactionDetails.this, "newAmount = " + newAmount, Toast.LENGTH_SHORT).show();
-
                 String newDate = dateView.getText().toString();
                 String newNotes = notesEdit.getText().toString();
 
@@ -118,9 +110,8 @@ public class TransactionDetails extends AppCompatActivity {
                         long newCategoryID = newCategory.getCategoryID();
 
                         if (transactionPurpose.equals("ADD")) {
-
-                            newTransaction = new Transaction(currentAccountID, finalNewAmount, newPayee, newDate, newStatus, newNotes,
-                                    newCategoryID);
+                            newTransaction = new Transaction(currentAccountID, finalNewAmount,
+                                    newPayee, newDate, newStatus, newNotes, newCategoryID);
 
                             // Try to insert
                             TransactionDetails.this.runOnUiThread(() -> {
@@ -130,25 +121,9 @@ public class TransactionDetails extends AppCompatActivity {
                                             "Transaction Added",
                                             Toast.LENGTH_SHORT).show();
 
-                                    int updatedAccounts = repo.addTransaction(currentAccountID, finalNewAmount);
-
-                                    // TODO delete
-//                                    if (updatedAccounts == 1) {
-//                                        Toast.makeText(
-//                                                TransactionDetails.this,
-//                                                "Account Balance Updated",
-//                                                Toast.LENGTH_LONG).show();
-//                                    } else {
-//                                        Toast.makeText(
-//                                                TransactionDetails.this,
-//                                                "Unable to update balance",
-//                                                Toast.LENGTH_SHORT).show();
-//                                    }
-
                                     Intent intent = new Intent(TransactionDetails.this, Transactions.class);
                                     intent.putExtra(Accounts.CURRENT_ACCOUNT_ID, currentAccountID);
                                     startActivity(intent);
-
                                 } else {
                                     Toast.makeText(
                                             TransactionDetails.this,
@@ -156,11 +131,10 @@ public class TransactionDetails extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 }
                             });
-
                         } else {
-                            newTransaction = new Transaction(currentTransaction.getTransactionID(),
-                                    currentAccountID, finalNewAmount, newPayee, newDate, newStatus, newNotes,
-                                    newCategoryID);
+                            newTransaction = new Transaction(
+                                    currentTransaction.getTransactionID(), currentAccountID,
+                                    finalNewAmount, newPayee, newDate, newStatus, newNotes, newCategoryID);
 
                             TransactionDetails.this.runOnUiThread(() -> {
                                 // Try to Update
@@ -170,21 +144,6 @@ public class TransactionDetails extends AppCompatActivity {
                                             TransactionDetails.this,
                                             "Transaction Updated",
                                             Toast.LENGTH_SHORT).show();
-
-                                    int updatedAccounts = repo.addTransaction(currentAccountID, finalNewAmount);
-
-                                    // TODO delete
-//                                    if (updatedAccounts == 1) {
-//                                        Toast.makeText(
-//                                                TransactionDetails.this,
-//                                                "Account Balance Updated",
-//                                                Toast.LENGTH_LONG).show();
-//                                    } else {
-//                                        Toast.makeText(
-//                                                TransactionDetails.this,
-//                                                "Unable to update balance",
-//                                                Toast.LENGTH_SHORT).show();
-//                                    }
 
                                     Intent intent = new Intent(TransactionDetails.this, Transactions.class);
                                     intent.putExtra(Accounts.CURRENT_ACCOUNT_ID, currentAccountID);
@@ -220,11 +179,14 @@ public class TransactionDetails extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             String selectedDate = dateView.getText().toString();
-
             try {
                 calendar.setTime(sdf.parse(selectedDate));
             } catch (ParseException e) {
                 e.printStackTrace();
+                Log.e("TransactionDetails", "Parse exception");
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Log.e("TransactionDetails", "Date Parse is null");
             }
             new DatePickerDialog(
                     TransactionDetails.this,
@@ -251,30 +213,9 @@ public class TransactionDetails extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_transaction_details, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logout:
-                Intent toLoginScreen = new Intent(TransactionDetails.this, UserLogin.class);
-                startActivity(toLoginScreen);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void assignPurpose() {
         transactionPurpose = getIntent().getStringExtra(Transactions.TRANSACTION_PURPOSE);
-
         if (transactionPurpose.equals("ADD")) {
-
             currentAccountID = getIntent().getLongExtra(Accounts.CURRENT_ACCOUNT_ID, 0);
             setTitle(getString(R.string.add_transaction));
             payee = "";
@@ -283,9 +224,8 @@ public class TransactionDetails extends AppCompatActivity {
             category = null;
             status = Transaction.Status.Reconciled;
             notes = "";
-
         } else if (transactionPurpose.equals("MODIFY")) {
-            transactionID = getIntent().getLongExtra(Transactions.SELECTED_TRANSACTION_ID, 0);
+            long transactionID = getIntent().getLongExtra(Transactions.SELECTED_TRANSACTION_ID, 0);
             currentTransaction = repo.getTransactionByID(transactionID);
             currentAccountID = currentTransaction.getAccountID();
 
@@ -341,7 +281,6 @@ public class TransactionDetails extends AppCompatActivity {
     }
 
     private void populateCategoryDropdown() {
-
         Thread categoryDropdownThread = new Thread(() -> {
             List<Category> categories = repo.getAllCategories();
             List<String> categoryStrings = new ArrayList<>();
@@ -349,8 +288,8 @@ public class TransactionDetails extends AppCompatActivity {
             if (Objects.equals(transactionPurpose, "MODIFY")) {
                 categoryID = category.getCategoryID();
             }
-            String categoryName = null;
 
+            String categoryName = null;
             for (Category category: categories) {
                 categoryStrings.add(category.getCategoryName());
                 if (category.getCategoryID() == categoryID) {
@@ -359,9 +298,7 @@ public class TransactionDetails extends AppCompatActivity {
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    TransactionDetails.this,
-                    R.layout.dropdown_item,
-                    categoryStrings);
+                    TransactionDetails.this, R.layout.dropdown_item, categoryStrings);
 
             String finalCategoryName = categoryName;
             long finalCategoryID = categoryID;
@@ -378,29 +315,32 @@ public class TransactionDetails extends AppCompatActivity {
     }
 
     private void populateStatusDropdown() {
-        // TODO put on worker thread
-        Transaction.Status[] statuses = Transaction.Status.values();
-        List<String> statusStrings = new ArrayList<>();
-        Transaction.Status selectedStatus = status;
-        String statusString = null;
+        Thread statusDropdownThread = new Thread(() -> {
+            Transaction.Status[] statuses = Transaction.Status.values();
+            List<String> statusStrings = new ArrayList<>();
+            Transaction.Status selectedStatus = status;
+            String statusString = null;
 
-        for (Transaction.Status status: statuses) {
-            statusStrings.add(status.toString());
-            if (status.equals(selectedStatus)) {
-                statusString = status.toString();
+            for (Transaction.Status status : statuses) {
+                statusStrings.add(status.toString());
+                if (status.equals(selectedStatus)) {
+                    statusString = status.toString();
+                }
             }
-        }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                TransactionDetails.this,
-                R.layout.dropdown_item,
-                statusStrings);
-        statusDropdown.setAdapter(adapter);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    TransactionDetails.this, R.layout.dropdown_item, statusStrings);
+            String finalStatusString = statusString;
+            TransactionDetails.this.runOnUiThread(() -> {
+                statusDropdown.setAdapter(adapter);
 
-        // Set to selected category
-        if (statusString != null && selectedStatus != null) {
-            statusDropdown.setSelection(adapter.getPosition(statusString));
-        }
+                // Set to selected category
+                if (finalStatusString != null) {
+                    statusDropdown.setSelection(adapter.getPosition(finalStatusString));
+                }
+            });
+        });
+        statusDropdownThread.start();
     }
 
     private void loadDeleteButton() {
@@ -429,8 +369,6 @@ public class TransactionDetails extends AppCompatActivity {
 
     public static boolean validCurrency(String string) {
 
-//        // TODO DELETE
-//        System.out.println("The double STRING is " + string);
         final int DECIMAL_PLACES = 2;
         int countDots = 0;
         int countDigits = 0;
@@ -459,14 +397,6 @@ public class TransactionDetails extends AppCompatActivity {
             } else {
                 countDigits++;
             }
-
-            //            TODO DELETE
-//            {
-//                System.out.println("Dots = " + countDots);
-//                System.out.println("Negs = " + countNegatives);
-//                return false;
-//            }
-
         }
         return countDigits > 0;
     }

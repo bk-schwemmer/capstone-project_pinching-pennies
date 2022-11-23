@@ -1,5 +1,6 @@
 package com.c196.bs_personal_finance.Entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -48,6 +49,7 @@ public class Category {
         this.parentID = parentID;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Category{" +

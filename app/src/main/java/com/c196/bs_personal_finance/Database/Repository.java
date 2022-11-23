@@ -58,7 +58,6 @@ public class Repository {
 
 
     // USERS
-
     public long insert(User user) {
         databaseExecutor.execute(()-> newUserID = mUserDAO.insert(user));
         try {

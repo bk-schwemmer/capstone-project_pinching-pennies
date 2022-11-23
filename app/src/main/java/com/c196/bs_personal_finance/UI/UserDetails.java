@@ -39,8 +39,6 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
     private Button deleteButton;
     private ProgressBar deletingProgress;
 
-//    private Spinner userDropdown;
-
     // CLICK LISTENERS
     private final View.OnClickListener cancel = view -> {
         Intent intent = new Intent(UserDetails.this, UserLogin.class);
@@ -110,31 +108,7 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
         FragmentManager manager = getSupportFragmentManager();
         UserDeletionFragment dialog = new UserDeletionFragment();
         dialog.show(manager, "warningDialog");
-//
-//        Thread deleteUserThread = new Thread(() -> {
-//
-//            List<Account> userAccounts = repo.getAccountsByUser(selectedUserID);
-//
-//            List<Transaction> transactionsInAccount = repo.getTransactionByAccount(currentAccount.getAccountID());
-//            if (transactionsInAccount.size() == 0) {
-//                deletedUser(currentAccount);
-//            }
-//        });
-//        deleteUserThread.start();
     };
-
-    // TODO DELETE
-//    private final AdapterView.OnItemSelectedListener userChosen = new AdapterView.OnItemSelectedListener() {
-//        @Override
-//        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-//            populateDetails();
-//        }
-//
-//        @Override
-//        public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,10 +119,6 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
         fetchUiElements();
         assignPurpose();
         populateDetails();
-
-        // TODO DELETE
-//        populateUserDropdown();
-//        userDropdown.setOnItemSelectedListener(userChosen);
 
         cancelButton.setOnClickListener(cancel);
         saveButton.setOnClickListener(save);
@@ -168,11 +138,6 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
 
         // Progress Bars
         deletingProgress = findViewById(R.id.deletingProgressBar);
-
-        // TODO DELETE
-        // Dropdown
-//        userDropdown = findViewById(R.id.userDropdown);
-
     }
 
     private void assignPurpose() {
@@ -183,11 +148,9 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
             name = "";
             username = "";
             password = "";
-
         } else if (purpose.equals("MODIFY")) {
             selectedUserID = getIntent().getLongExtra(UserLogin.CURRENT_USER_ID, 0);
             selectedUser = repo.getUserByID(selectedUserID);
-
             setTitle(getString(R.string.user_details));
             name = selectedUser.getName();
             username = selectedUser.getUsername();
@@ -197,56 +160,10 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
     }
 
     private void populateDetails() {
-
         nameEdit.setText(name);
         usernameEdit.setText(username);
         passwordEdit.setText(password);
-
-//        selectedUser = null;
-//        if (userDropdown.getSelectedItem() instanceof User) {
-//            selectedUser = (User) userDropdown.getSelectedItem();
-//        }
-//
-//        if (selectedUser != null) {
-//            String name = selectedUser.getName();
-//            String username = selectedUser.getUsername();
-//            String password = selectedUser.getPassword();
-//
-//
-//            if (selectedUser.getName().equals(getString(R.string.new_user))) {
-//                nameEdit.setText("");
-//            } else {
-//                nameEdit.setText(name);
-//            }
-//            usernameEdit.setText(username);
-//            passwordEdit.setText(password);
-//        }
     }
-
-    // TODO DELETE
-//    private void populateUserDropdown() {
-//
-//        Thread typeDropdownThread = new Thread(() -> {
-//            List<User> users = repo.getAllUsers();
-//
-//            // Add new user to top of list
-//            User newUser = new User(getString(R.string.new_user), "", "");
-//            users.add(0, newUser);
-//
-//            ArrayAdapter<User> adapter = new ArrayAdapter<>(
-//                    UserDetails.this,
-//                    R.layout.dropdown_item,
-//                    users);
-//
-//            UserDetails.this.runOnUiThread(() -> {
-//                userDropdown.setAdapter(adapter);
-//
-//                // Default to 'New User'
-//                userDropdown.setSelection(adapter.getPosition(newUser));
-//            });
-//        });
-//        typeDropdownThread.start();
-//    }
 
     private void loadDeleteButton() {
         deleteButton.setVisibility(View.VISIBLE);
@@ -276,7 +193,6 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
     }
 
     private boolean deletedUser(User user) {
-
         if (deletedAccountsForUser(selectedUserID)) {
             return (repo.delete(user) < 1);
         } else {
@@ -285,17 +201,19 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
     }
 
     private boolean deletedAccountsForUser(long userID) {
-
         List<Account> accounts = repo.getAccountsByUser(userID);
 
         if (accounts.size() == 0) return true;
         else {
             for (Account account : accounts) {
                 if (!deletedTransactionsForAccount(account.getAccountID())) {
-//                    Log.e(Log.ERROR,"");
+                    Log.e("UserDetails","Failed to delete all transactions in account " + account.getAccountName());
                     return false;
                 }
-                if (repo.delete(account) < 0) return false;
+                if (repo.delete(account) < 0){
+                    Log.e("UserDetails","Failed to delete account " + account.getAccountName());
+                    return false;
+                }
             }
 
             // Verify all accounts have been deleted
@@ -310,7 +228,10 @@ public class UserDetails extends AppCompatActivity implements UserDeletionFragme
         if (transactions.size() == 0) return true;
         else {
             for (Transaction transaction : transactions) {
-                if (repo.delete(transaction) < 0) return false;
+                if (repo.delete(transaction) < 0) {
+                    Log.e("UserDetails","Failed to delete transaction: ID " + transaction.getTransactionID());
+                    return false;
+                }
             }
 
             // Verify all assessments have been deleted

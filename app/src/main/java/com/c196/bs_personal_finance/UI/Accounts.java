@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -27,15 +28,11 @@ import com.c196.bs_personal_finance.Entity.Transaction;
 import com.c196.bs_personal_finance.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Type;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-
-// Followed answer guide here to implement Context Menu in RecyclerView
+// Followed guide from answer to implement Context Menu in RecyclerView
 // https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview
 
 public class Accounts extends AppCompatActivity implements AccountDeleteFragment.OnAccountDeletedListener {
@@ -59,7 +56,6 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
     private RecyclerView mLiabilityRecyclerView;
     private FloatingActionButton addAccountButton;
     private ProgressBar deletingProgress;
-    private CardView mAccountCard;
 
 
     private enum Choice { ASSET, LIABILITY }
@@ -95,6 +91,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -167,16 +164,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
             noAccounts.setVisibility(View.VISIBLE);
         }
 
-        // TODO DELETE
-        if (unsortedAccounts.size() > 0) {
-            Toast.makeText(
-                    Accounts.this,
-                    "There is/are " + unsortedAccounts.size() + " unsorted accounts",
-                    Toast.LENGTH_LONG).show();
-        }
-
-        // TODO: PUT IN WORKER THREAD
-        // Load terms
+        // Load Accounts
         RecyclerView.LayoutManager assetLayoutManager =
                 new GridLayoutManager(getApplicationContext(), 1);
         RecyclerView.LayoutManager liabilityLayoutManager =
@@ -234,9 +222,8 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         public AccountHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.recyclerview_account_card, parent, false));
             itemView.setOnClickListener(this);
-            mAccountCard = itemView.findViewById(R.id.accountCardView);
+            CardView mAccountCard = itemView.findViewById(R.id.accountCardView);
             System.out.println(parent.toString());
-//            String s = "asset";
             if ((parent.toString()).contains("asset")) {
                 mAccountCard.setCardBackgroundColor(getColor(R.color.light_asset_green));
             } else {
@@ -252,14 +239,10 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
             NumberFormat nf = NumberFormat.getCurrencyInstance();
             double balance = account.getCurrentBalance();
             mBalanceView.setText(nf.format(balance));
-
-//            mTextView.setBackgroundColor(mTermColors[cardAdder % mTermColors.length]);
-//            cardAdder++;
         }
 
         @Override
         public void onClick(View view) {
-
             selectedAccount = mAccount;
 
             Intent intent = new Intent(Accounts.this, Transactions.class);
@@ -274,7 +257,6 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         private final List<Account> mAccountList;
         private onLongItemClickListener mOnLongItemClickListener;
 
-
         public AccountAdapter(List<Account> accounts) {
             mAccountList = accounts;
         }
@@ -283,6 +265,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
             mOnLongItemClickListener = onLongItemClickListener;
         }
 
+        @NonNull
         @Override
         public AccountHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getApplicationContext());
@@ -312,6 +295,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
         inflater.inflate(R.menu.menu_account_context, menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
@@ -369,9 +353,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
     }
 
     public void deleteAccount(Account account) {
-        Accounts.this.runOnUiThread(() -> {
-            deletingProgress.setVisibility(View.VISIBLE);
-        });
+        Accounts.this.runOnUiThread(() -> deletingProgress.setVisibility(View.VISIBLE));
 
         if (repo.delete(account) < 1) {
             Accounts.this.runOnUiThread(() -> {

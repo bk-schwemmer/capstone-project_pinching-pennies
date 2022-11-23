@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.c196.bs_personal_finance.R;
@@ -17,6 +18,7 @@ public class UserDeletionFragment extends DialogFragment {
 
     private UserDeletionFragment.OnUserDeletedListener mListener;
 
+    @NonNull
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -30,7 +32,7 @@ public class UserDeletionFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mListener = (UserDeletionFragment.OnUserDeletedListener) context;
     }

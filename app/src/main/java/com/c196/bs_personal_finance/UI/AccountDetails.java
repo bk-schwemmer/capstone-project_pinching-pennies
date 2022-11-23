@@ -27,7 +27,6 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
 
     private Repository repo;
     private String purpose;
-    private long accountID;
     private long currentUserID;
     private Account currentAccount;
     private Account newAccount;
@@ -210,7 +209,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
             accountType = Account.AccountType.Cash;
 
         } else if (purpose.equals("MODIFY")) {
-            accountID = getIntent().getLongExtra(Accounts.CURRENT_ACCOUNT_ID, 0);
+            long accountID = getIntent().getLongExtra(Accounts.CURRENT_ACCOUNT_ID, 0);
             currentAccount = repo.getAccountByID(accountID);
 
             setTitle(getString(R.string.account_details));

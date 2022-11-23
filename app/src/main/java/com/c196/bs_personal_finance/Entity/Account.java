@@ -1,5 +1,6 @@
 package com.c196.bs_personal_finance.Entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -78,14 +79,6 @@ public class Account {
 
     public String getCurrentBalanceString() {
         DecimalFormat df = new DecimalFormat("#,###.##");
-//        String formattedBalance;
-//        if (currentBalance < 0) {
-//            currentBalance = currentBalance * -1;
-//            formattedBalance = "($" + df.format(currentBalance) + ")";
-//        } else {
-//            formattedBalance = "$" + df.format(currentBalance);
-//        }
-//        return formattedBalance;
         return df.format(currentBalance);
     }
 
@@ -93,6 +86,7 @@ public class Account {
         this.currentBalance = currentBalance;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Account{" +
@@ -101,28 +95,6 @@ public class Account {
                 ", type=" + type +
                 ", currentBalance=" + currentBalance +
                 '}';
-    }
-
-    public static String typeToString(AccountType accountType) {
-        switch (accountType) {
-            case Cash:
-                return "Cash";
-            case Checking:
-                return "Checking";
-            case Savings:
-                return "Savings";
-            case Fund:
-                return "Fund";
-            case Credit:
-                return "Credit";
-            case Debt:
-                return "Debt";
-            case Payment:
-                return "Payment";
-
-            default:
-                return "";
-        }
     }
 
     public static AccountType stringToType(String typeString) {

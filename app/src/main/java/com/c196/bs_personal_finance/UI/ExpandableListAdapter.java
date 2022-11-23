@@ -1,5 +1,6 @@
 package com.c196.bs_personal_finance.UI;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -17,10 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Followed Tutorial at https://www.loginworks.com/blogs/work-expandablelistview-android/
-
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
-    private Context context;
+    private final Context context;
     private List<String> dateList;
     private List<String> originalDateList;
     private HashMap<String, List<String>> transactionsList;
@@ -46,9 +45,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int listPosition) {
-        return this.transactionsList
-                .get(this.dateList.get(listPosition))
-                .size();
+        try {
+            return this.transactionsList
+                    .get(this.dateList.get(listPosition))
+                    .size();
+        } catch (NullPointerException e) {
+            Log.e("ExpandableListAdapter", "Unable to get size of dateList at position " + listPosition);
+            return -1;
+        }
     }
 
     @Override
@@ -58,10 +62,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int listPosition, int expandedListPosition) {
-        return this.transactionsList
-                .get(this.dateList
-                .get(listPosition))
-                .get(expandedListPosition);
+         try {
+            return this.transactionsList
+                    .get(this.dateList
+                    .get(listPosition))
+                    .get(expandedListPosition);
+        } catch (NullPointerException e) {
+            Log.e("ExpandableListAdapter", "Unable to get child at position " + expandedListPosition);
+            return null;
+        }
     }
 
     @Override
@@ -79,6 +88,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getGroupView(int listPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String listTitle = (String) getGroup(listPosition);
@@ -92,6 +102,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getChildView(int listPosition, final int expandedListPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final String transactionText = (String) getChild(listPosition, expandedListPosition);
@@ -102,16 +113,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView transactionTitleView = convertView.findViewById(R.id.childTitle);
         TextView transactionAmountView = convertView.findViewById(R.id.childAmount);
-
         String[] parsedTransaction = transactionText.split("_");
-
         transactionTitleView.setText(parsedTransaction[1]);
+
         if (parsedTransaction.length > 2) {
             NumberFormat nf = NumberFormat.getCurrencyInstance();
-
             String amountString = parsedTransaction[2];
-
             double amount;
+
             if (TransactionDetails.validCurrency(amountString)) {
                 amount = Double.parseDouble(amountString);
                 amountString = nf.format(amount);
@@ -128,17 +137,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public void filterData(String query) {
+        // Followed Tutorial at https://www.loginworks.com/blogs/work-expandablelistview-android/ guide on implementation
         query = query.toLowerCase();
-        Log.v("TransactionListAdapter", String.valueOf(transactionsList.size()));
         dateList.clear();
         transactionsList.clear();
-        Log.v("TransactionListAdapter", String.valueOf(transactionsList.size()));
 
         if (query.isEmpty()) {
             dateList.addAll(originalDateList);
             transactionsList.putAll(originalTransactionsList);
-            Log.v("TransactionListAdapter", String.valueOf(originalTransactionsList.size()));
-            Log.v("TransactionListAdapter", String.valueOf(transactionsList.size()));
         } else {
             for (Map.Entry<String, List<String>> transactionEntry : originalTransactionsList.entrySet()) {
                 List<String> transactions = new ArrayList<>();
@@ -147,7 +153,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     if (transactionData.length > 1) {
                         if ((transactionData[1].toLowerCase()).contains(query)) {
                             transactions.add(value);
-                            Log.v("Transaction Value", value);
                         }
                     }
                 }
@@ -157,7 +162,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 }
             }
         }
-        Log.v("TransactionListAdapter", String.valueOf(transactionsList.size()));
+        Log.v("TransactionListAdapter", "Transaction List Size: " + transactionsList.size());
         notifyDataSetChanged();
     }
 }

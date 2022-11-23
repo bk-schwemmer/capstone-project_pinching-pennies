@@ -3,13 +3,13 @@ package com.c196.bs_personal_finance.UI;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +28,6 @@ import com.c196.bs_personal_finance.Entity.Category;
 import com.c196.bs_personal_finance.Entity.Transaction;
 import com.c196.bs_personal_finance.R;
 
-import java.sql.Array;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,7 +37,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class Reports extends AppCompatActivity implements DatePickerFragment.ReturnTimeframeListener {
 
@@ -68,18 +66,14 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
     final SimpleDateFormat mdf = new SimpleDateFormat(monthFormat, Locale.US);
     final SimpleDateFormat ydf = new SimpleDateFormat(yearFormat, Locale.US);
     final String currentDate = sdf.format(new Date());
-    private DatePickerDialog.OnDateSetListener setDate;
 
 
     public enum ReportType { MoM, YoY }
 
     private final View.OnClickListener pickCategory = view -> {
 
-        List<Integer> categoryList = new ArrayList<>();
         boolean[] tempSelected = new boolean[categorySelections.length];
-        for (int i = 0; i < categorySelections.length; i++) {
-            tempSelected[i] = categorySelections[i];
-        }
+        System.arraycopy(categorySelections, 0, tempSelected, 0, categorySelections.length);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Reports.this);
         builder.setTitle(getString(R.string.select_categories));
@@ -107,7 +101,6 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
             public void onClick(DialogInterface dialogInterface, int i) {
                 for (int j = 0; j < categorySelections.length; j++) {
                     categorySelections[j] = false;
-                    categoryList.clear();
                     categoryDropdown.setText("");
                 }
                 generateReport();
@@ -117,14 +110,16 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
     };
 
     private final View.OnClickListener pickDate = view -> {
-        String selectedDate = currentDate;
-
         selectedPicker = view.getId();
 
         try {
-            calendar.setTime(sdf.parse(selectedDate));
+            calendar.setTime(sdf.parse(currentDate));
         } catch (ParseException e) {
             e.printStackTrace();
+            Log.e("Reports", "Parse Exception");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Log.e("Reports", "Unable to retrieve date");
         }
 
         DialogFragment datePickerFrag = new DatePickerFragment();
@@ -179,6 +174,7 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -211,14 +207,6 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
         // Buttons
         startPicker = findViewById(R.id.timeframeStartPicker);
         endPicker = findViewById(R.id.timeframeEndPicker);
-
-        // TODO Delete?
-//        setDate = (datePicker, year, monthOfYear, dayOfMonth) -> {
-//            calendar.set(Calendar.YEAR, year);
-//            calendar.set(Calendar.MONTH, monthOfYear);
-//            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-//            dateView.setText(sdf.format(calendar.getTime()));
-//        };
     }
 
     private void populateCategories() {
@@ -242,7 +230,7 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
 
         for (ReportType type : types) {
                 typeStrings.add(type.toString());
-                this.reportType = type;
+                reportType = type;
             }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -278,11 +266,8 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
         boolean typeReady = false;
         boolean startReady = false;
         boolean endReady = false;
-
         Date startDate = null;
         Date endDate = null;
-
-//        int numRows = 0;
         List<Category> reportCategories = new ArrayList<>();
 
         // Category validation
@@ -293,7 +278,6 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
                     reportCategories.add(allCategories.get(i));
                 }
             }
-//            numRows = reportCategories.size();
         }
 
         // Type validation
@@ -309,10 +293,6 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
                     e.printStackTrace();
                 }
                 startReady = true;
-//                String[] split = selectedStart.split("/");
-//                startTime = Integer.parseInt(split[0]);
-//                startYear = Integer.parseInt(split[1]);
-//                startReady = true;
             } else if (reportType.equals(ReportType.YoY)) {
                 try {
                     startDate = ydf.parse(selectedStart);
@@ -333,10 +313,6 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
                     e.printStackTrace();
                 }
                 endReady = true;
-//                String[] split = selectedStart.split("/");
-//                startTime = Integer.parseInt(split[0]);
-//                startYear = Integer.parseInt(split[1]);
-//                startReady = true;
             } else if (reportType.equals(ReportType.YoY)) {
                 try {
                     endDate = ydf.parse(selectedEnd);
@@ -345,15 +321,6 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
                 }
                 endReady = true;
             }
-//            if (reportType.equals(ReportType.MoM)) {
-//                String[] split = selectedEnd.split("/");
-//                endMonth = Integer.parseInt(split[0]);
-//                endTime = Integer.parseInt(split[1]);
-//                endReady = true;
-//            } else if (reportType.equals(ReportType.YoY)) {
-//                endTime = Integer.parseInt(selectedEnd);
-//                endReady = true;
-//            }
         }
 
         if (categoryReady && typeReady && startReady && endReady) {
@@ -375,7 +342,6 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
 
                 // Pull all transactions for user
                 List<Transaction> userTransactions = repo.getTransactionsByUser(currentUserID);
-//                List<Transaction> categoryTransactions = new ArrayList<>();
 
                 // Loop through categories and filter transactions
                 for (Category category : reportCategories) {
@@ -419,18 +385,9 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
                                     sumEnd += transaction.getAmount();
                                 }
                             }
-//                            categoryTransactions.add(transaction);
                         }
                     }
                     difference = sumEnd - sumStart;
-
-//                    // TODO delete
-//                   System.out.println(category.getCategoryName() + ":");
-//                    System.out.println("Start Sum: " + sumStart +
-//                            " | End Sum: " + sumEnd +
-//                            " | Difference: " + difference);
-//                    System.out.println("ROWnUM: " + rowNum);
-
 
                     // Populate the table row
                     NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -485,7 +442,7 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
                 column2.setTextColor(getColor(R.color.white));
                 column2.setBackgroundColor(getColor(R.color.dark_gray));
             } else {
-                column2.setGravity(Gravity.RIGHT);
+                column2.setGravity(Gravity.END);
             }
             column2.setText(col2);
             column2.setLayoutParams(cellParams);
@@ -501,7 +458,7 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
                 column3.setTextColor(getColor(R.color.white));
                 column3.setBackgroundColor(getColor(R.color.dark_gray));
             } else {
-                column3.setGravity(Gravity.RIGHT);
+                column3.setGravity(Gravity.END);
                 column3.setBackgroundColor(getColor(R.color.light_gray));
             }
             column3.setText(col3);
@@ -517,7 +474,7 @@ public class Reports extends AppCompatActivity implements DatePickerFragment.Ret
                 column4.setTextColor(getColor(R.color.white));
                 column4.setBackgroundColor(getColor(R.color.dark_gray));
             } else {
-                column4.setGravity(Gravity.RIGHT);
+                column4.setGravity(Gravity.END);
             }
             column4.setText(col4);
             column4.setLayoutParams(rowParams);

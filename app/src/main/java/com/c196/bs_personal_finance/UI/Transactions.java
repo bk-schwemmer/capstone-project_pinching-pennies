@@ -2,17 +2,18 @@ package com.c196.bs_personal_finance.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.c196.bs_personal_finance.Database.Repository;
 import com.c196.bs_personal_finance.Entity.Transaction;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Transactions extends AppCompatActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
@@ -52,26 +52,18 @@ public class Transactions extends AppCompatActivity implements SearchView.OnQuer
         startActivity(intent);
     };
 
-    private final View.OnClickListener onSearch = view -> {
-        Intent intent = new Intent(Transactions.this, TransactionDetails.class);
-        intent.putExtra(Accounts.CURRENT_ACCOUNT_ID, currentAccountID);
-        intent.putExtra(TRANSACTION_PURPOSE, getString(R.string.add));
-        startActivity(intent);
-    };
-
-    private final ExpandableListView.OnChildClickListener transactionSelected =
-            ((parent, view, groupPosition, childPosition, id) -> {
-        Toast.makeText(
-                getApplicationContext(),
-                transactionMap.get(datesList.get(groupPosition)).get(childPosition),
-                Toast.LENGTH_LONG).show();
-
-        String[] parsedChild = transactionMap.get(datesList.get(groupPosition)).get(childPosition).split("_");
-        long transactionID = Long.parseLong(parsedChild[0]);
-        Intent intent = new Intent(Transactions.this, TransactionDetails.class);
-        intent.putExtra(SELECTED_TRANSACTION_ID, transactionID);
-        intent.putExtra(TRANSACTION_PURPOSE, getString(R.string.modify));
-        startActivity(intent);
+    private final ExpandableListView.OnChildClickListener transactionSelected = ((parent, view, groupPosition, childPosition, id) -> {
+        try {
+            String[] parsedChild = transactionMap.get(datesList.get(groupPosition)).get(childPosition).split("_");
+            long transactionID = Long.parseLong(parsedChild[0]);
+            Intent intent = new Intent(Transactions.this, TransactionDetails.class);
+            intent.putExtra(SELECTED_TRANSACTION_ID, transactionID);
+            intent.putExtra(TRANSACTION_PURPOSE, getString(R.string.modify));
+            startActivity(intent);
+        } catch (NullPointerException e) {
+                e.printStackTrace();
+                Log.e("Transactions", "Unable to parse transaction at childPosition " + childPosition);
+        }
 
         return false;
     });
@@ -84,6 +76,7 @@ public class Transactions extends AppCompatActivity implements SearchView.OnQuer
         repo = new Repository(getApplication());
         fetchUiElements();
         populatePageDetails();
+        addTransactionButton.setOnClickListener(addTransaction);
 
         // Set up search functionality
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -101,8 +94,6 @@ public class Transactions extends AppCompatActivity implements SearchView.OnQuer
             transactionHeading.setVisibility(View.GONE);
             search.setVisibility(View.GONE);
         }
-
-        addTransactionButton.setOnClickListener(addTransaction);
     }
 
     @Override
@@ -111,6 +102,7 @@ public class Transactions extends AppCompatActivity implements SearchView.OnQuer
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -165,7 +157,6 @@ public class Transactions extends AppCompatActivity implements SearchView.OnQuer
         } else {
             transactions = repo.getTransactionByAccount(currentAccountID);
         }
-
         return transactions.size() != 0;
     }
 
@@ -180,22 +171,10 @@ public class Transactions extends AppCompatActivity implements SearchView.OnQuer
         createList();
         expandableListAdapter = new ExpandableListAdapter(this, datesList, transactionMap);
         expandableList.setAdapter(expandableListAdapter);
-
-        expandableList.setOnGroupExpandListener(groupPosition ->
-                Toast.makeText(getApplicationContext(),
-                        datesList.get(groupPosition) + " List Expanded.",
-                        Toast.LENGTH_SHORT).show());
-
-        expandableList.setOnGroupCollapseListener(groupPosition ->
-                Toast.makeText(getApplicationContext(),
-                        datesList.get(groupPosition) + " List Collapsed.",
-                        Toast.LENGTH_SHORT).show());
-
         expandableList.setOnChildClickListener(transactionSelected);
     }
 
     private void createList() {
-
         List<String> transactionDetails = new ArrayList<>();
         int counter = 0;
         String transactionDate = transactions.get(0).getDate();
@@ -214,7 +193,6 @@ public class Transactions extends AppCompatActivity implements SearchView.OnQuer
                 transactionMap.put(transactionDate, transactionDetails);
             }
         }
-
         datesList = new ArrayList<>(transactionMap.keySet());
         datesList.sort(Collections.reverseOrder());
     }

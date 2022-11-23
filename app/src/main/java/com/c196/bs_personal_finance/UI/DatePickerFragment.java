@@ -7,13 +7,13 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.c196.bs_personal_finance.R;
 
-import java.time.Month;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Objects;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -21,6 +21,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         void onDateSet(int month, int year);
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.dialogTheme);
@@ -32,9 +33,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         DatePickerDialog dialog = new DatePickerDialog(requireContext(),
                 R.style.dialogTheme,
                 this,
-                year,
-                month,
-                1);
+                year, month, 1);
 
         LinearLayout pickerParentLayout = (LinearLayout) dialog.getDatePicker().getChildAt(0);
         LinearLayout pickerSpinnersHolder = (LinearLayout) pickerParentLayout.getChildAt(0);
@@ -50,6 +49,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         ReturnTimeframeListener listener = (ReturnTimeframeListener) getActivity();
-        listener.onDateSet(month, year);
+        Objects.requireNonNull(listener).onDateSet(month, year);
     }
 }

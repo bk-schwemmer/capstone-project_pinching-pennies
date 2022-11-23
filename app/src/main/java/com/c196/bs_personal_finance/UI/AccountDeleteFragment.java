@@ -2,9 +2,9 @@ package com.c196.bs_personal_finance.UI;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 public class AccountDeleteFragment extends DialogFragment {
@@ -16,7 +16,7 @@ public class AccountDeleteFragment extends DialogFragment {
 
     private OnAccountDeletedListener mListener;
 
-
+    @NonNull
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -30,7 +30,7 @@ public class AccountDeleteFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mListener = (OnAccountDeletedListener) context;
     }

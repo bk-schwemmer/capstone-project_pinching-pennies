@@ -16,20 +16,6 @@
         android:gravity="center_vertical"
         android:padding="@dimen/spacing_huge" >
 
-        <!-- User List -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Users"
-            android:textSize="20sp"
-            />
-
-        <Spinner
-            android:id="@+id/userDropdown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
         <!-- Name -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +31,8 @@
                 android:id="@+id/nameEdit"
                 style="@style/detailInput"
                 android:inputType="text"
-                android:hint="@string/name" />
+                android:hint="@string/name"
+                android:autofillHints="" />
         </LinearLayout>
 
         <!-- Username -->
@@ -63,7 +50,8 @@
                 android:id="@+id/usernameEdit"
                 style="@style/detailInput"
                 android:inputType="text"
-                android:hint="@string/username" />
+                android:hint="@string/username"
+                android:autofillHints="" />
         </LinearLayout>
 
         <!-- Password -->
@@ -81,7 +69,8 @@
                 android:id="@+id/passwordEdit"
                 style="@style/detailInput"
                 android:inputType="textPassword"
-                android:hint="@string/password" />
+                android:hint="@string/password"
+                android:autofillHints="" />
         </LinearLayout>
 
         <!-- Buttons -->
@@ -91,22 +80,21 @@
             android:orientation="horizontal"
             android:divider="@drawable/spacer_huge"
             android:showDividers="middle"
-            android:gravity="center"
-            >
+            android:gravity="center">
 
             <Button
                 android:id="@+id/cancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
-                />
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
-                />
+                style="?android:attr/buttonBarButtonStyle" />
         </LinearLayout>
 
         <Button
