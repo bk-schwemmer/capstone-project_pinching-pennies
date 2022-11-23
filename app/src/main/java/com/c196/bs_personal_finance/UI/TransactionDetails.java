@@ -90,7 +90,7 @@ public class TransactionDetails extends AppCompatActivity {
             String newAmountString = amountEdit.getText().toString();
             newAmountString = newAmountString.replace(",", "");
             double newAmount;
-            if (!validDouble(newAmountString)) {
+            if (!validCurrency(newAmountString)) {
                 AlertDialog.Builder invalidAmount = new AlertDialog.Builder(TransactionDetails.this)
                         .setTitle("Invalid Amount")
                         .setMessage("An invalid value was entered as the amount.\n" +
@@ -427,31 +427,38 @@ public class TransactionDetails extends AppCompatActivity {
         }
     }
 
-    public static boolean validDouble(String string) {
+    public static boolean validCurrency(String string) {
 
-        // TODO DELETE
-        System.out.println("The double STRING is " + string);
-
-
+//        // TODO DELETE
+//        System.out.println("The double STRING is " + string);
         final int DECIMAL_PLACES = 2;
         int countDots = 0;
+        int countDigits = 0;
 
         // Empty String
         if (string.length() == 0) return false;
 
         for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i) == '.') {
+            if (!Character.isDigit(string.charAt(i))) {
+                if (string.charAt(i) == '.') {
+                    // Decimal is more than 2 places from last digit
+                    if (i + DECIMAL_PLACES < string.length() - 1) return false;
+                    else countDots++;
 
-                // Decimal is more than 2 places from last digit
-                if (i + DECIMAL_PLACES < string.length() - 1) return false;
-                else countDots++;
+                    // More than one decimal
+                    if (countDots > 1) return false;
+
+                // Negative sign anywhere other than front
+                } else if (string.charAt(i) == '-') {
+                    if (i > 0) return false;
+
+                // If the character is anything other than a digit, ".", or "-" it's wrong
+                } else {
+                    return false;
+                }
+            } else {
+                countDigits++;
             }
-
-            // Negative sign anywhere other than front
-            if (string.charAt(i) == '-' && i > 0) return false;
-
-            // More than one decimal
-            if (countDots > 1) return false;
 
             //            TODO DELETE
 //            {
@@ -461,6 +468,6 @@ public class TransactionDetails extends AppCompatActivity {
 //            }
 
         }
-        return true;
+        return countDigits > 0;
     }
 }

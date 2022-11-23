@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Transactions extends AppCompatActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener{
+public class Transactions extends AppCompatActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     public static final String SELECTED_TRANSACTION_ID = "selectedTransactionID";
     public static final String TRANSACTION_PURPOSE = "transactionPurpose";
@@ -33,9 +33,9 @@ public class Transactions extends AppCompatActivity implements SearchView.OnQuer
     private Repository repo;
     private ExpandableListView expandableList;
     private ExpandableListAdapter expandableListAdapter;
-    List<Transaction> transactions;
+    private List<Transaction> transactions;
     private List<String> datesList;
-    HashMap<String, List<String>> transactionMap;
+    private HashMap<String, List<String>> transactionMap;
     private long currentUserID;
     private long currentAccountID = 0;
 

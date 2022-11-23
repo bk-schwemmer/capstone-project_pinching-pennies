@@ -1,7 +1,7 @@
 <resources>
 
     // Login
-    <string name="app_name">BROKE</string>
+    <string name="app_name">Pinching Pennies</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>

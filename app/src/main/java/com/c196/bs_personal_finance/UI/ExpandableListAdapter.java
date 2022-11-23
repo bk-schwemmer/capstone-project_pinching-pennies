@@ -112,7 +112,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             String amountString = parsedTransaction[2];
 
             double amount;
-            if (TransactionDetails.validDouble(amountString)) {
+            if (TransactionDetails.validCurrency(amountString)) {
                 amount = Double.parseDouble(amountString);
                 amountString = nf.format(amount);
             }

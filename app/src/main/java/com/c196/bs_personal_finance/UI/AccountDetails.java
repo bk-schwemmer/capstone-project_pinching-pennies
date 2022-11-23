@@ -64,7 +64,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
             String newAmountString = balanceEdit.getText().toString();
             newAmountString = newAmountString.replace(",", "");
             double newAmount;
-            if (!TransactionDetails.validDouble(newAmountString)) {
+            if (!TransactionDetails.validCurrency(newAmountString)) {
                 AlertDialog.Builder invalidAmount = new AlertDialog.Builder(AccountDetails.this)
                         .setTitle("Invalid Amount")
                         .setMessage("An invalid value was entered as the amount.")

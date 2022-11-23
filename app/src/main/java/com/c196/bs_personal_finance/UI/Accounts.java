@@ -49,6 +49,8 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
     private Account selectedAccount;
     private long currentUserID;
     private int mCurrentItemPosition;
+    private Choice selectedList;
+
 
     private LinearLayout assetLayout;
     private LinearLayout liabilityLayout;
@@ -59,7 +61,6 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
     private ProgressBar deletingProgress;
     private CardView mAccountCard;
 
-    private Choice selectedList;
 
     private enum Choice { ASSET, LIABILITY }
 
