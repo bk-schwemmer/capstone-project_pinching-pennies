@@ -40,16 +40,17 @@ import java.util.Locale;
 
 public class Reports extends AppCompatActivity implements DatePickerFragment.ReturnTimeframeListener {
 
+    // MEMBERS
     public static ReportType reportType;
     public static int selectedPicker;
-
     private Repository repo;
     private long currentUserID;
-    List<Category> allCategories;
-    String[] categories;
-    boolean[] categorySelections;
-    int rowNum;
+    private List<Category> allCategories;
+    private String[] categories;
+    private boolean[] categorySelections;
+    private int rowNum;
 
+    // VIEWS
     private Spinner typeDropdown;
     private TextView categoryDropdown;
     private Button startPicker;

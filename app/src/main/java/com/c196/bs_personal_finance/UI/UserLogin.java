@@ -25,7 +25,6 @@ public class UserLogin extends AppCompatActivity {
     public static final String PURPOSE = "purpose";
 
     private Repository repo;
-
     private String submittedUsername;
     private String submittedPassword;
     private User foundUser;

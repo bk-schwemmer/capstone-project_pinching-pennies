@@ -37,6 +37,7 @@ import java.util.List;
 
 public class Accounts extends AppCompatActivity implements AccountDeleteFragment.OnAccountDeletedListener {
 
+    // MEMBERS
     public static final String CURRENT_ACCOUNT_ID = "currentAccountID";
     public static final String ACCOUNT_PURPOSE = "accountPurpose";
 
@@ -48,7 +49,7 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
     private int mCurrentItemPosition;
     private Choice selectedList;
 
-
+    // VIEWS
     private LinearLayout assetLayout;
     private LinearLayout liabilityLayout;
     private TextView noAccounts;
@@ -325,10 +326,9 @@ public class Accounts extends AppCompatActivity implements AccountDeleteFragment
                             FragmentManager manager = getSupportFragmentManager();
                             AccountDeleteFragment dialog = new AccountDeleteFragment();
                             dialog.show(manager, "warningDialog");
-                            System.out.println("Unable to delete Account. There are transactions assigned to this account.");
                             Toast.makeText(
                                     Accounts.this,
-                                    "This term has courses",
+                                    "This account has transactions",
                                     Toast.LENGTH_SHORT).show();
                         });
                     }

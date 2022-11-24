@@ -24,7 +24,7 @@ import java.util.List;
 
 public class AccountDetails extends AppCompatActivity implements AccountDeleteFragment.OnAccountDeletedListener {
 
-
+    // Members
     private Repository repo;
     private String purpose;
     private long currentUserID;
@@ -34,6 +34,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
     private String accountBalance;
     private Account.AccountType accountType;
 
+    // Views
     private EditText nameEdit;
     private EditText balanceEdit;
     private Spinner typeDropdown;
@@ -72,11 +73,7 @@ public class AccountDetails extends AppCompatActivity implements AccountDeleteFr
                 alertDialog.show();
             } else {
                 newAmount = Double.parseDouble(newAmountString);
-
                 double finalNewAmount = newAmount;
-
-                // TODO DELETE
-//                Toast.makeText(AccountDetails.this, "newAmount = " + newAmount, Toast.LENGTH_SHORT).show();
 
                 Thread thread = new Thread(() -> {
                     // Create new transaction from all current fields

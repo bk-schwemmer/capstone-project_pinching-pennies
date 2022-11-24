@@ -23,13 +23,13 @@ import java.util.List;
 public class UserDetails extends AppCompatActivity implements UserDeletionFragment.OnUserDeletedListener {
 
     private Repository repo;
-    private String purpose;
     private User newUser;
     private User selectedUser;
     private long selectedUserID;
-    String name;
-    String username;
-    String password;
+    private String purpose;
+    private String name;
+    private String username;
+    private String password;
 
     private EditText nameEdit;
     private EditText usernameEdit;

@@ -213,6 +213,28 @@ public class TransactionDetails extends AppCompatActivity {
 
     }
 
+    private void fetchUiElements() {
+
+        // Text Views
+        payeeEdit = findViewById(R.id.payeeEdit);
+        amountEdit = findViewById(R.id.amountEdit);
+        dateView = findViewById(R.id.dateView);
+        notesEdit = findViewById(R.id.notesEdit);
+
+        // Dropdown Lists
+        categoryDropdown = findViewById(R.id.categoryDropdown);
+        statusDropdown = findViewById(R.id.statusDropdown);
+
+        // Buttons
+        cancelButton = findViewById(R.id.cancelButton);
+        saveButton = findViewById(R.id.saveButton);
+        deleteButton = findViewById(R.id.deleteButton);
+        datePicker = findViewById(R.id.datePickerButton);
+
+        // Progress Bars
+        deletingProgress = findViewById(R.id.deletingProgressBar);
+    }
+
     private void assignPurpose() {
         transactionPurpose = getIntent().getStringExtra(Transactions.TRANSACTION_PURPOSE);
         if (transactionPurpose.equals("ADD")) {
@@ -238,28 +260,6 @@ public class TransactionDetails extends AppCompatActivity {
             status = currentTransaction.getStatus();
             loadDeleteButton();
         }
-    }
-
-    private void fetchUiElements() {
-
-        // Text Views
-        payeeEdit = findViewById(R.id.payeeEdit);
-        amountEdit = findViewById(R.id.amountEdit);
-        dateView = findViewById(R.id.dateView);
-        notesEdit = findViewById(R.id.notesEdit);
-
-        // Dropdown Lists
-        categoryDropdown = findViewById(R.id.categoryDropdown);
-        statusDropdown = findViewById(R.id.statusDropdown);
-
-        // Buttons
-        cancelButton = findViewById(R.id.cancelButton);
-        saveButton = findViewById(R.id.saveButton);
-        deleteButton = findViewById(R.id.deleteButton);
-        datePicker = findViewById(R.id.datePickerButton);
-
-        // Progress Bars
-        deletingProgress = findViewById(R.id.deletingProgressBar);
     }
 
     private void populateDetails() {

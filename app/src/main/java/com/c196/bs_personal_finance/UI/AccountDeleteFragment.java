@@ -9,7 +9,6 @@ import androidx.fragment.app.DialogFragment;
 
 public class AccountDeleteFragment extends DialogFragment {
 
-
     public interface OnAccountDeletedListener {
         void onDeleteOverride();
     }
