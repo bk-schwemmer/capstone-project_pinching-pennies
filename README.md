@@ -1,4 +1,4 @@
-# Pinching Pennies Purpose
+# Pinching Pennies App
 Pinching Pennies is a solution to tracking and managing finances in a quick, easy, portable way. After surveying friends and family members, it became
 apparent that many prefer a homegrown Excel spreadsheet over a dedicated app because they were all missing something. Pinching Pennies is my aim at
 filling the gap between what is currently offered through apps, and what people actually want / will use.
